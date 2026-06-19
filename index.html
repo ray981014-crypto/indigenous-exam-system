@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原特三等社會行政．上榜作戰系統</title>
+    <!-- 引入文青感 Google 字體 (明體) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fcfbfa; /* 大地色系/米白留白 */
+            --text-color: #332f2c;
+            --accent-color: #8c7b6e; /* 溫柔的大地棕 */
+            --border-color: #e6e3e0;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Noto Serif TC', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* 頂部文青風 Header */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 30px;
+        }
+
+        h1 {
+            font-weight: 500;
+            letter-spacing: 2px;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        /* 倒數計時 Callout 區塊 */
+        .countdown-box {
+            background-color: #f4f1ee;
+            padding: 15px;
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* 主排版：左右二欄 */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 10px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        /* YouTube 播放器容器 */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 考科列表與進度條樣式 */
+        .subject-item {
+            margin-bottom: 20px;
+        }
+        .subject-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+        .progress-bar-bg {
+            background-color: #f0ede9;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background-color: var(--accent-color);
+            height: 100%;
+            width: 0%; /* 動態填入 */
+            transition: width 0.6s ease;
+        }
+
+        /* 文青風按鈕 */
+        .btn-link {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: opacity 0.2s;
+        }
+        .btn-link:hover { opacity: 0.9; }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: #eae6e1;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>原特三等．社會行政上榜系統</h1>
+        <div class="countdown-box" id="countdown">🎯 正在計算考前衝刺倒數...</div>
+    </header>
+
+    <div class="main-layout">
+        <!-- 左側：作戰行動與外部連結 -->
+        <div class="left-column">
+            <div class="card">
+                <div class="section-title">⚡ 外部系統快捷聯網</div>
+                <p>擺脫 Notion 的卡頓，直接點選下方按鈕，一鍵跳轉至你的 Google 進度試算表或讀書文件：</p>
+                <!-- 替換成你的 Google Sheet / Doc 連結 -->
+                <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn-link" style="margin-right: 10px;">打開 Google 學習試算表</a>
+                <a href="https://docs.google.com/document/" target="_blank" class="btn-link" style="background-color: #a39284;">打開 NotebookLM 筆記文件</a>
+            </div>
+
+            <div class="card">
+                <div class="section-title">☕ 專注空間 (YouTube Ambient)</div>
+                <!-- 這裡放入你喜歡的 YouTube 背景音樂網址中的 ID (例如：embed/後面的代碼) -->
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側：考科結構與進度監控 -->
+        <div class="right-column">
+            <div class="card">
+                <div class="section-title">📊 考科進度與精簡權重</div>
+                
+                <p style="font-size: 0.85rem; color: #7a736e; margin-bottom: 20px;">📝 普通科目 (佔 20%)</p>
+                <div class="subject-item">
+                    <div class="subject-info"><span>基礎能力測驗<small class="tag">作文40%/英文40%/憲法20%</small></span><span>45%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 45%;"></div></div>
+                </div>
+                <div class="subject-item">
+                    <div class="subject-info"><span>原住民族行政及法規</span><span>30%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 30%;"></div></div>
+                </div>
+
+                <p style="font-size: 0.85rem; color: #7a736e; margin-top: 30px; margin-bottom: 20px;">📚 專業科目 (佔 80%)</p>
+                <div class="subject-item">
+                    <div class="subject-info"><span>行政法<small class="tag">申論+測驗混合題</small></span><span>60%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 60%;"></div></div>
+                </div>
+                <div class="subject-item">
+                    <div class="subject-info"><span>社會福利政策與法規</span><span>20%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 20%;"></div></div>
+                </div>
+                <div class="subject-item">
+                    <div class="subject-info"><span>社會學</span><span>75%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 75%;"></div></div>
+                </div>
+                <div class="subject-item">
+                    <div class="subject-info"><span>社會工作</span><span>50%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 50%;"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 自動計算距離 2026 原特三等考試 (假設為 2026/09/05，可自行修改) 的倒數計時
+    function updateCountdown() {
+        const examDate = new Date("2026-09-05T00:00:00").getTime();
+        const now = new Date().getTime();
+        const distance = examDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const countdownElement = document.getElementById("countdown");
+
+        if (days > 0) {
+            countdownElement.innerHTML = `🎯 距離原特三等考試還有 <b>${days}</b> 天！靜心沉澱，穩定輸出。`;
+        } else if (days === 0) {
+            countdownElement.innerHTML = `🔥 戰場已到，相信自己的累積，展現成果！`;
+        } else {
+            countdownElement.innerHTML = `✨ 考試已結束，辛苦你了！好好放鬆休息。`;
+        }
+    }
+    updateCountdown();
+</script>
+</body>
+</html>
