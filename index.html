@@ -319,7 +319,7 @@
     // 🔗 串接 GOOGLE 試算表 API 功能設定
     // ==========================================
     
-    // ⚠️ 請將下方引號內的網址，替換成你在 Google 部署的「網頁應用程式 (Web App) URL」
+    // ⚠️ 請記得將下方引號內的網址，替換成你在 Google 部署的「網頁應用程式 (Web App) URL」
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/xxxx/exec";
 
     document.getElementById('study-form').addEventListener('submit', function(e) {
@@ -333,33 +333,34 @@
         submitBtn.innerText = "正在傳送至 Google 與 LINE...";
         statusDiv.style.display = "none";
 
-        // 收集表單資料
-        const formData = {
-            subject: document.getElementById('form-subject').value,
-            hours: document.getElementById('form-hours').value,
-            summary: document.getElementById('form-summary').value,
-            status: document.getElementById('form-status-select').value
-        };
+        // ✨【核心修正】改用 URLSearchParams 封裝資料，這是穿透 no-cors 最完美且穩定的格式！
+        const searchParams = new URLSearchParams();
+        searchParams.append('subject', document.getElementById('form-subject').value);
+        searchParams.append('hours', document.getElementById('form-hours').value);
+        searchParams.append('summary', document.getElementById('form-summary').value);
+        searchParams.append('status', document.getElementById('form-status-select').value);
 
         // 發送 POST 請求給 Google Apps Script
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors', // 避免本地端跨網域(CORS)錯誤
+            mode: 'no-cors', // 允許跨網域發送
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded' // 配合參數化傳遞
             },
-            body: JSON.stringify(formData)
+            body: searchParams.toString() // 轉為標準表單參數字串
         })
         .then(() => {
+            // 在 no-cors 模式下，只要請求成功發出就會直接進入 .then()
             // 顯示成功狀態
             statusDiv.style.display = "block";
+            statusDiv.style.color = "var(--success-color)";
             statusDiv.innerText = "✨ 紀錄成功！進度已同步，LINE 通知已發送。";
             
-            // 清空表單
+            // 清空表單數值
             document.getElementById('form-hours').value = '';
             document.getElementById('form-summary').value = '';
             
-            // 恢復按鈕
+            // 恢復按鈕狀態
             submitBtn.disabled = false;
             submitBtn.innerText = "送出今日讀書紀錄";
         })
