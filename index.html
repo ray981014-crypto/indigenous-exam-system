@@ -15,6 +15,7 @@
   --muted:#8a8178;
   --line:#e7e3df;
   --accent:#8c7b6e;
+  --error:#a35d5d;
 }
 
 body{
@@ -67,6 +68,8 @@ input,select,textarea{
   border:1px solid var(--line);
   background:#faf9f7;
   margin-top:5px;
+  font-family:"Noto Serif TC";
+  box-sizing:border-box;
 }
 
 button{
@@ -76,22 +79,37 @@ button{
   background:var(--accent);
   color:white;
   cursor:pointer;
+  margin-top:10px;
+}
+
+button:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
 }
 
 .progress{
   height:6px;
   background:#eee;
+  border-radius:3px;
+  overflow:hidden;
 }
 
 .bar{
   height:100%;
   background:var(--accent);
   width:0%;
+  transition:width 0.6s ease;
 }
 
 .small{
   font-size:13px;
   color:var(--muted);
+}
+
+#form-status{
+  margin-top:10px;
+  font-size:13px;
+  display:none;
 }
 </style>
 </head>
@@ -121,7 +139,7 @@ button{
 <option>原民法規</option>
 </select>
 
-<input id="hours" placeholder="學習時數">
+<input id="hours" type="number" step="0.5" min="0" placeholder="學習時數">
 <textarea id="summary" placeholder="今日摘要（法條/概念/錯題）"></textarea>
 
 <select id="status">
@@ -130,7 +148,8 @@ button{
 <option>已精通</option>
 </select>
 
-<button onclick="submitData()">送出紀錄</button>
+<button id="submit-btn" onclick="submitData()">送出紀錄</button>
+<div id="form-status"></div>
 </div>
 
 <div class="card">
@@ -163,7 +182,7 @@ frameborder="0"></iframe>
 
 <div class="card">
 <div class="title">⚖️ 戰情中心</div>
-<div id="dashboard"></div>
+<div id="dashboard" class="small">⏳ 雲端同步中...</div>
 </div>
 
 <div class="card">
@@ -178,7 +197,8 @@ frameborder="0"></iframe>
 
 <script>
 
-const API = "你的GoogleAppsScript網址";
+// ⚠️ 請換成你「管理部署作業」裡看到的正確網址，結尾必須是 /exec
+const API = "https://script.google.com/macros/s/AKfycbxxjv9q6CJOU5AX-cWxic4SXUU6GvkZWO0MIhMfI7Dn-k6dXJUJ6tdX5JO3wGFLtnPB/exec";
 
 function countdown(){
   const exam = new Date("2026-09-05").getTime();
@@ -190,41 +210,103 @@ function countdown(){
 countdown();
 
 function submitData(){
-  const body = new URLSearchParams();
-  body.append("subject",subject.value);
-  body.append("hours",hours.value);
-  body.append("summary",summary.value);
-  body.append("status",status.value);
+  const subject = document.getElementById('subject').value;
+  const hours = document.getElementById('hours').value;
+  const summary = document.getElementById('summary').value;
+  const status = document.getElementById('status').value;
+  const submitBtn = document.getElementById('submit-btn');
+  const statusDiv = document.getElementById('form-status');
 
-  fetch(API,{method:"POST",body})
-  .then(r=>r.json())
-  .then(()=>{
-    load();
-    alert("已送出");
+  if(!hours || !summary){
+    statusDiv.style.display = "block";
+    statusDiv.style.color = "var(--error)";
+    statusDiv.innerText = "❌ 請填寫學習時數與摘要";
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.innerText = "正在傳送至 Google 與 LINE...";
+  statusDiv.style.display = "none";
+
+  const body = new URLSearchParams();
+  body.append("subject", subject);
+  body.append("hours", hours);
+  body.append("summary", summary);
+  body.append("status", status);
+
+  fetch(API, {
+    method: "POST",
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString()
+  })
+  .then(r => {
+    if(!r.ok) throw new Error(`HTTP 錯誤，狀態碼: ${r.status}`);
+    return r.json();
+  })
+  .then(data => {
+    statusDiv.style.display = "block";
+
+    // 只有後端真的回報 success，才當作送出成功
+    // 不然不管 Apps Script 內部是否出錯，畫面都會誤顯示「已送出」
+    if(data && data.status === 'success'){
+      statusDiv.style.color = "var(--accent)";
+      statusDiv.innerText = "✨ 紀錄成功！進度已同步，LINE 通知已發送。";
+      document.getElementById('hours').value = '';
+      document.getElementById('summary').value = '';
+      load();
+    } else {
+      statusDiv.style.color = "var(--error)";
+      statusDiv.innerText = "❌ Google 端處理失敗：" + (data && data.message ? data.message : "未知錯誤，請檢查 Apps Script 執行記錄");
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.innerText = "送出紀錄";
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    statusDiv.style.display = "block";
+    statusDiv.style.color = "var(--error)";
+    statusDiv.innerText = "❌ 傳送失敗：" + error.message + "（請確認 API 網址是否正確）";
+    submitBtn.disabled = false;
+    submitBtn.innerText = "送出紀錄";
   });
 }
 
 function load(){
-  fetch(API+"?action=getProgress")
-  .then(r=>r.json())
-  .then(data=>{
-    render(data.subjects);
+  document.getElementById("dashboard").innerHTML = "⏳ 雲端同步中...";
+
+  fetch(API + "?action=getProgress")
+  .then(r => {
+    if(!r.ok) throw new Error(`HTTP 錯誤，狀態碼: ${r.status}`);
+    return r.json();
+  })
+  .then(data => {
+    if(data && data.status === 'success' && data.subjects){
+      render(data.subjects);
+    } else {
+      document.getElementById("dashboard").innerHTML = "⚠️ 同步失敗：" + (data && data.message ? data.message : "未知錯誤");
+    }
+  })
+  .catch(error => {
+    console.error('讀取雲端進度失敗:', error);
+    document.getElementById("dashboard").innerHTML = "⚠️ 無法連線雲端，請檢查網路或 API 設定";
   });
 }
 
 function render(data){
-  let html="";
+  let html = "";
   for(let k in data){
-    html+=`
+    const pct = Math.min(Math.round(data[k].exp / 2), 100);
+    html += `
     <div>
       <b>${k}</b><br>
       EXP ${data[k].exp}<br>
-      <div class="progress"><div class="bar" style="width:${Math.min(data[k].exp/2,100)}%"></div></div>
+      <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
       <small>${data[k].latestSummary}</small>
       <br><br>
     </div>`;
   }
-  document.getElementById("dashboard").innerHTML=html;
+  document.getElementById("dashboard").innerHTML = html || "尚無紀錄";
 }
 
 load();
