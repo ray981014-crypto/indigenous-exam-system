@@ -1,230 +1,235 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>原特三等社會行政．上榜作戰系統</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #fcfbfa;
-            --text-color: #332f2c;
-            --accent-color: #8c7b6e;
-            --border-color: #e6e3e0;
-            --card-bg: #ffffff;
-            --success-color: #6e8c78;
-        }
-        body { font-family: 'Noto Serif TC', serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 40px 20px; line-height: 1.8; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 30px; }
-        h1 { font-weight: 500; letter-spacing: 2px; font-size: 2rem; margin-bottom: 10px; }
-        .countdown-box { background-color: #f4f1ee; padding: 15px; border-radius: 4px; display: inline-block; font-size: 1.1rem; letter-spacing: 1px; margin-top: 15px; border: 1px solid var(--border-color); }
-        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
-        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } }
-        .section-title { font-size: 1.2rem; font-weight: 700; border-left: 3px solid var(--accent-color); padding-left: 10px; margin-bottom: 20px; letter-spacing: 1px; }
-        .card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 25px; border-radius: 4px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 4px; border: 1px solid var(--border-color); }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .subject-item { margin-bottom: 20px; }
-        .subject-info { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 5px; }
-        .progress-bar-bg { background-color: #f0ede9; height: 6px; border-radius: 3px; overflow: hidden; }
-        .progress-bar-fill { background-color: var(--accent-color); height: 100%; width: 0%; transition: width 0.6s ease; }
-        .btn-link { display: inline-block; background-color: var(--accent-color); color: white; text-decoration: none; padding: 10px 20px; border-radius: 4px; font-size: 0.9rem; letter-spacing: 1px; transition: opacity 0.2s; border: none; cursor: pointer; }
-        .btn-link:hover { opacity: 0.9; }
-        .btn-link:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-line { background-color: #06C755; }
-        .tag { font-size: 0.75rem; padding: 2px 6px; border-radius: 3px; background: #eae6e1; margin-left: 5px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 0.9rem; margin-bottom: 5px; font-weight: 500; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-family: 'Noto Serif TC', serif; color: var(--text-color); box-sizing: border-box; background-color: #faf9f7; }
-        .form-control:focus { outline: none; border-color: var(--accent-color); background-color: #ffffff; }
-        #form-status { margin-top: 10px; font-size: 0.9rem; color: var(--success-color); display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原特三等社會行政｜作戰指揮中心 V2</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#fbfaf8;
+  --card:#ffffff;
+  --text:#2f2b28;
+  --muted:#8a8178;
+  --line:#e7e3df;
+  --accent:#8c7b6e;
+}
+
+body{
+  margin:0;
+  font-family:"Noto Serif TC";
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+}
+
+.container{max-width:1100px;margin:auto;padding:40px 20px;}
+
+header{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+h1{font-weight:500;letter-spacing:2px;}
+
+.callout{
+  background:#f3f0ec;
+  border:1px solid var(--line);
+  padding:15px;
+  margin-top:10px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:30px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.title{
+  font-weight:600;
+  border-left:3px solid var(--accent);
+  padding-left:10px;
+  margin-bottom:15px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid var(--line);
+  background:#faf9f7;
+  margin-top:5px;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  border:none;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+
+.progress{
+  height:6px;
+  background:#eee;
+}
+
+.bar{
+  height:100%;
+  background:var(--accent);
+  width:0%;
+}
+
+.small{
+  font-size:13px;
+  color:var(--muted);
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-    <header>
-        <h1>原特三等．社會行政上榜系統</h1>
-        <div class="countdown-box" id="countdown">🎯 正在計算考前衝刺倒數...</div>
-    </header>
 
-    <div class="main-layout">
-        <div class="left-column">
-            <div class="card">
-                <div class="section-title">⚡ 外部系統快捷聯網</div>
-                <p>擺脫工具的卡頓，一鍵跳轉至你的雲端備考核心與通訊小幫手：</p>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn-link">打開 Google 學習試算表</a>
-                    <a href="https://docs.google.com/document/" target="_blank" class="btn-link" style="background-color: #a39284;">打開 NotebookLM 筆記文件</a>
-                    <a href="https://line.me/R/ti/p/@你的官方帳號ID" target="_blank" class="btn-link btn-line">打開 LINE 備考小幫手</a>
-                </div>
-            </div>
+<header>
+  <h1>原特三等｜社會行政作戰中心</h1>
+  <div class="callout" id="countdown"></div>
+</header>
 
-            <div class="card">
-                <div class="section-title">✍️ 紀錄今日步伐</div>
-                <p style="font-size: 0.85rem; color: #7a736e;">在此填寫將直接同步至 Google 試算表，並由 LINE 官方帳號發送進度回報。</p>
-                
-                <form id="study-form">
-                    <div class="form-group">
-                        <label>讀書科目</label>
-                        <select class="form-control" id="form-subject" required>
-                            <option value="行政法">行政法 (專業)</option>
-                            <option value="社會福利政策與法規">社會福利政策與法規 (專業)</option>
-                            <option value="社會學">社會學 (專業)</option>
-                            <option value="社會工作">社會工作 (專業)</option>
-                            <option value="基礎能力測驗">基礎能力測驗 (普通)</option>
-                            <option value="原住民族行政及法規">原住民族行政及法規 (普通)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>學習時數 (小時)</label>
-                        <input type="number" step="0.5" min="0" class="form-control" id="form-hours" placeholder="例如: 2.5" required>
-                    </div>
-                    <div class="form-group">
-                        <label>學習章節與內容摘要</label>
-                        <textarea class="form-control" id="form-summary" rows="3" placeholder="請輸入今天利用 NotebookLM 整理的核心重點或進度..." required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>目前掌握狀態</label>
-                        <select class="form-control" id="form-status-select" required>
-                            <option value="複習中">🌱 複習中</option>
-                            <option value="已讀完">🌿 已讀完</option>
-                            <option value="已精通">🌳 已精通</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-link" id="submit-btn" style="width: 100%; font-weight: 500;">送出今日讀書紀錄</button>
-                    <div id="form-status"></div>
-                </form>
-            </div>
+<div class="grid">
 
-            <div class="card">
-                <div class="section-title">☕ 專注空間 (YouTube Ambient)</div>
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
+<!-- 左側 -->
+<div>
 
-        <div class="right-column">
-            <div class="card">
-                <div class="section-title">📊 考科進度與精簡權重</div>
-                
-                <p style="font-size: 0.85rem; color: #7a736e; margin-bottom: 20px;">📝 普通科目 (佔 20%)</p>
-                <div class="subject-item">
-                    <div class="subject-info"><span>基礎能力測驗<small class="tag">作文40%/英文40%/憲法20%</small></span><span>45%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 45%;"></div></div>
-                </div>
-                <div class="subject-item">
-                    <div class="subject-info"><span>原住民族行政及法規</span><span>30%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 30%;"></div></div>
-                </div>
+<div class="card">
+<div class="title">📝 今日讀書紀錄</div>
 
-                <p style="font-size: 0.85rem; color: #7a736e; margin-top: 30px; margin-bottom: 20px;">📚 專業科目 (佔 80%)</p>
-                <div class="subject-item">
-                    <div class="subject-info"><span>行政法<small class="tag">申論+測驗混合題</small></span><span>60%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 60%;"></div></div>
-                </div>
-                <div class="subject-item">
-                    <div class="subject-info"><span>社會福利政策與法規</span><span>20%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 20%;"></div></div>
-                </div>
-                <div class="subject-item">
-                    <div class="subject-info"><span>社會學</span><span>75%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 75%;"></div></div>
-                </div>
-                <div class="subject-item">
-                    <div class="subject-info"><span>社會工作</span><span>50%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 50%;"></div></div>
-                </div>
-            </div>
-        </div>
-    </div>
+<select id="subject">
+<option>行政法</option>
+<option>社會福利政策與法規</option>
+<option>社會工作</option>
+<option>社會學</option>
+<option>原民法規</option>
+</select>
+
+<input id="hours" placeholder="學習時數">
+<textarea id="summary" placeholder="今日摘要（法條/概念/錯題）"></textarea>
+
+<select id="status">
+<option>複習中</option>
+<option>已讀完</option>
+<option>已精通</option>
+</select>
+
+<button onclick="submitData()">送出紀錄</button>
+</div>
+
+<div class="card">
+<div class="title">🔥 今日錯題</div>
+<div id="wrongBox" class="small">載入中...</div>
+</div>
+
+<div class="card">
+<div class="title">🎯 本週作戰目標</div>
+<div class="small">
+□ 行政法 §141<br>
+□ 行政罰法 §24<br>
+□ 長照2.0<br>
+□ 社會學理論<br>
+□ 原基法整理
+</div>
+</div>
+
+<div class="card">
+<div class="title">☕ 專注音樂</div>
+<iframe width="100%" height="200"
+src="https://www.youtube.com/embed/jfKfPfyJRdk"
+frameborder="0"></iframe>
+</div>
+
+</div>
+
+<!-- 右側 -->
+<div>
+
+<div class="card">
+<div class="title">⚖️ 戰情中心</div>
+<div id="dashboard"></div>
+</div>
+
+<div class="card">
+<div class="title">📊 本週統計</div>
+<div id="stats" class="small"></div>
+</div>
+
+</div>
+
+</div>
 </div>
 
 <script>
-    function updateCountdown() {
-        const examDate = new Date("2026-09-05T00:00:00").getTime();
-        const now = new Date().getTime();
-        const distance = examDate - now;
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const countdownElement = document.getElementById("countdown");
+const API = "你的GoogleAppsScript網址";
 
-        if (days > 0) {
-            countdownElement.innerHTML = `🎯 距離原特三等考試還有 <b>${days}</b> 天！靜心沉澱，穩定輸出。`;
-        } else if (days === 0) {
-            countdownElement.innerHTML = `🔥 戰場已到，相信自己的累積，展現成果！`;
-        } else {
-            countdownElement.innerHTML = `✨ 考試已結束，辛苦你了！好好放鬆休息。`;
-        }
-    }
-    updateCountdown();
+function countdown(){
+  const exam = new Date("2026-09-05").getTime();
+  const now = new Date().getTime();
+  const d = Math.floor((exam-now)/(1000*60*60*24));
+  document.getElementById("countdown").innerHTML =
+  d>0 ? `🎯 距離考試還有 ${d} 天` : "🔥 考試已到";
+}
+countdown();
 
-    // ⚠️ 請換成你「管理部署作業」(Manage deployments) 裡看到的正確網址
-    // 格式必須長這樣：https://script.google.com/macros/s/AKfycb.../exec
-    // 結尾一定是 /exec，不是 /dev
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/請換成你的部署ID/exec";
+function submitData(){
+  const body = new URLSearchParams();
+  body.append("subject",subject.value);
+  body.append("hours",hours.value);
+  body.append("summary",summary.value);
+  body.append("status",status.value);
 
-    document.getElementById('study-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const submitBtn = document.getElementById('submit-btn');
-        const statusDiv = document.getElementById('form-status');
-        
-        submitBtn.disabled = true;
-        submitBtn.innerText = "正在傳送至 Google 與 LINE...";
-        statusDiv.style.display = "none";
+  fetch(API,{method:"POST",body})
+  .then(r=>r.json())
+  .then(()=>{
+    load();
+    alert("已送出");
+  });
+}
 
-        const searchParams = new URLSearchParams();
-        searchParams.append('subject', document.getElementById('form-subject').value);
-        searchParams.append('hours', document.getElementById('form-hours').value);
-        searchParams.append('summary', document.getElementById('form-summary').value);
-        searchParams.append('status', document.getElementById('form-status-select').value);
+function load(){
+  fetch(API+"?action=getProgress")
+  .then(r=>r.json())
+  .then(data=>{
+    render(data.subjects);
+  });
+}
 
-        // 拿掉 no-cors，改成可以讀到真實回應的請求
-        // 這樣才能真正知道是「送到了但 Apps Script 內部出錯」還是「根本沒送到」
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: searchParams.toString()
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP 錯誤，狀態碼: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            statusDiv.style.display = "block";
+function render(data){
+  let html="";
+  for(let k in data){
+    html+=`
+    <div>
+      <b>${k}</b><br>
+      EXP ${data[k].exp}<br>
+      <div class="progress"><div class="bar" style="width:${Math.min(data[k].exp/2,100)}%"></div></div>
+      <small>${data[k].latestSummary}</small>
+      <br><br>
+    </div>`;
+  }
+  document.getElementById("dashboard").innerHTML=html;
+}
 
-            if (data && data.status === 'success') {
-                statusDiv.style.color = "var(--success-color)";
-                statusDiv.innerText = "✨ 紀錄成功！進度已同步，LINE 通知已發送。";
+load();
 
-                document.getElementById('form-hours').value = '';
-                document.getElementById('form-summary').value = '';
-            } else {
-                // Apps Script 收到請求，但內部處理失敗（例如寫入試算表或呼叫 LINE API 出錯）
-                statusDiv.style.color = "#8c6e6e";
-                statusDiv.innerText = "❌ Google 端處理失敗：" + (data && data.message ? data.message : "未知錯誤，請檢查 Apps Script 執行記錄");
-            }
-
-            submitBtn.disabled = false;
-            submitBtn.innerText = "送出今日讀書紀錄";
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            statusDiv.style.display = "block";
-            statusDiv.style.color = "#8c6e6e";
-            // 常見原因：網址還是 xxxx 預留值、網址結尾不是 /exec、CORS 被擋、或部署權限不是「任何人」
-            statusDiv.innerText = "❌ 傳送失敗：" + error.message + "（請確認 GOOGLE_SCRIPT_URL 是否已換成正確網址）";
-            submitBtn.disabled = false;
-            submitBtn.innerText = "送出今日讀書紀錄";
-        });
-    });
 </script>
+
 </body>
 </html>
