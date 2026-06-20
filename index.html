@@ -148,8 +148,8 @@ button:disabled{
 </div>
 
 <div class="card">
-<div class="title">🔥 今日錯題</div>
-<div id="wrongBox" class="small">載入中...</div>
+<div class="title">📌 待複習提醒</div>
+<div id="reviewBox" class="small">⏳ 雲端同步中...</div>
 </div>
 
 <div class="card">
@@ -179,14 +179,14 @@ referrerpolicy="strict-origin-when-cross-origin"
 allowfullscreen></iframe>
 </div>
 
-<div class="card">
-<div class="title">⚖️ 戰情中心</div>
-<div id="dashboard" class="small">⏳ 雲端同步中...</div>
+<div class="card" id="neglect-card" style="display:none;">
+<div class="title">⚠️ 科目冷落提醒</div>
+<div id="neglectBox" class="small"></div>
 </div>
 
 <div class="card">
-<div class="title">📊 本週統計</div>
-<div id="stats" class="small"></div>
+<div class="title">⚖️ 戰情中心</div>
+<div id="dashboard" class="small">⏳ 雲端同步中...</div>
 </div>
 
 </div>
@@ -197,7 +197,7 @@ allowfullscreen></iframe>
 <script>
 
 // ⚠️ 請換成你「管理部署作業」裡看到的正確網址，結尾必須是 /exec
-const API = "https://script.google.com/macros/s/AKfycbwCJz0C9_nuXtjG-ruJe52-A3Ru7iIj3j8jyOWRrLZfte4wUPxhb1eSMKBXmuwAdyYQ/exec";
+const API = "https://script.google.com/macros/s/AKfycbwlwZBCKXX2wFepbxZSX_P5dwhZgFWbcHIBG_Yl4ER4uRR-o2Ch0USccoVyj5UdApqw/exec";
 
 function countdown(){
   const exam = new Date("2026-09-05").getTime();
@@ -271,6 +271,7 @@ function submitData(){
 
 function load(){
   document.getElementById("dashboard").innerHTML = "⏳ 雲端同步中...";
+  document.getElementById("reviewBox").innerHTML = "⏳ 雲端同步中...";
 
   fetch(API + "?action=getProgress")
   .then(r => {
@@ -280,13 +281,17 @@ function load(){
   .then(data => {
     if(data && data.status === 'success' && data.subjects){
       render(data.subjects);
+      renderNeglected(data.neglectedSubjects || []);
+      renderReviewDue(data.reviewDueSubjects || []);
     } else {
       document.getElementById("dashboard").innerHTML = "⚠️ 同步失敗：" + (data && data.message ? data.message : "未知錯誤");
+      document.getElementById("reviewBox").innerHTML = "⚠️ 同步失敗";
     }
   })
   .catch(error => {
     console.error('讀取雲端進度失敗:', error);
     document.getElementById("dashboard").innerHTML = "⚠️ 無法連線雲端，請檢查網路或 API 設定";
+    document.getElementById("reviewBox").innerHTML = "⚠️ 無法連線雲端";
   });
 }
 
@@ -300,6 +305,47 @@ function render(data){
     </div>`;
   }
   document.getElementById("dashboard").innerHTML = html || "尚無紀錄";
+}
+
+// ⚠️ 渲染「科目冷落提醒」卡片：哪些科目太久沒讀、或從來沒讀過
+function renderNeglected(list){
+  const card = document.getElementById("neglect-card");
+  const box = document.getElementById("neglectBox");
+
+  if(!list || list.length === 0){
+    card.style.display = "none";
+    return;
+  }
+
+  card.style.display = "block";
+  let html = "";
+  list.forEach(item => {
+    const daysText = item.daysSinceLast === null
+      ? "從未開始"
+      : `${item.daysSinceLast} 天沒讀了`;
+    html += `<div style="margin-bottom:6px;">🔸 <b>${item.subject}</b>　${daysText}</div>`;
+  });
+  box.innerHTML = html;
+}
+
+// 📌 渲染「待複習提醒」卡片：哪些科目標記「複習中」太久沒被覆蓋
+function renderReviewDue(list){
+  const box = document.getElementById("reviewBox");
+
+  if(!list || list.length === 0){
+    box.innerHTML = "目前沒有待複習的科目，繼續保持！";
+    return;
+  }
+
+  let html = "";
+  list.forEach(item => {
+    html += `
+    <div style="margin-bottom:10px;">
+      📌 <b>${item.subject}</b>　已 ${item.daysSinceLast} 天沒回顧<br>
+      <span style="font-size:12px;">${item.summary}</span>
+    </div>`;
+  });
+  box.innerHTML = html;
 }
 
 load();
