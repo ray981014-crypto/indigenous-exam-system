@@ -23,7 +23,7 @@ body{
   font-family:"Noto Serif TC";
   background:var(--bg);
   color:var(--text);
-  font-size: 17px; /* ✨ 基礎字體調大 (原為預設16px) */
+  font-size: 17px; 
   line-height:1.7;
 }
 
@@ -37,7 +37,7 @@ header{
 h1{
   font-weight:500;
   letter-spacing:2px;
-  font-size: 32px; /* ✨ 大標題字體加強 */
+  font-size: 32px; 
 }
 
 .callout{
@@ -45,7 +45,7 @@ h1{
   border:1px solid var(--line);
   padding:15px;
   margin-top:10px;
-  font-size: 18px; /* ✨ 倒數計時更醒目 */
+  font-size: 20px; /* ✨ 稍微加大倒數卡片字體 */
 }
 
 .grid{
@@ -57,26 +57,26 @@ h1{
 .card{
   background:var(--card);
   border:1px solid var(--line);
-  padding:22px; /* ✨ 內距微調，配大字體更舒適 */
+  padding:22px; 
   margin-bottom:20px;
 }
 
 .title{
   font-weight:600;
-  font-size: 19px; /* ✨ 卡片標題調大 */
-  border-left:4px solid var(--accent); /* 線條稍微加粗 */
+  font-size: 19px; 
+  border-left:4px solid var(--accent); 
   padding-left:10px;
   margin-bottom:15px;
 }
 
 input,select,textarea{
   width:100%;
-  padding:12px; /* ✨ 點擊區域與內距加大 */
+  padding:12px; 
   border:1px solid var(--line);
   background:#faf9f7;
   margin-top:5px;
   font-family:"Noto Serif TC";
-  font-size: 16px; /* ✨ 輸入框字體調大 */
+  font-size: 16px; 
   box-sizing:border-box;
 }
 
@@ -88,7 +88,7 @@ button{
   color:white;
   cursor:pointer;
   margin-top:10px;
-  font-size: 17px; /* ✨ 按鈕字體調大 */
+  font-size: 17px; 
 }
 
 button:disabled{
@@ -97,13 +97,13 @@ button:disabled{
 }
 
 .small{
-  font-size:15px; /* ✨ 說明小字從 13px 放大到 15px */
+  font-size:15px; 
   color:var(--muted);
 }
 
 #form-status{
   margin-top:10px;
-  font-size:15px; /* ✨ 狀態提示從 13px 放大到 15px */
+  font-size:15px; 
   display:none;
 }
 
@@ -113,7 +113,7 @@ button:disabled{
 
 .youtube-card .title{
   margin-bottom:8px;
-  font-size:16px; /* ✨ 音樂標題調大 */
+  font-size:16px; 
 }
 </style>
 </head>
@@ -160,18 +160,8 @@ button:disabled{
 <div id="reviewBox" class="small">⏳ 雲端同步中...</div>
 </div>
 
-<div class="card">
-<div class="title">🎯 本週作戰目標</div>
-<div style="font-size: 16px; line-height: 1.9;">
-□ 行政法 §141<br>
-□ 行政罰法 §24<br>
-□ 長照2.0<br>
-□ 社會學理論<br>
-□ 原基法整理
-</div>
 </div>
 
-</div>
 
 <div>
 
@@ -184,6 +174,17 @@ frameborder="0"
 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 referrerpolicy="strict-origin-when-cross-origin"
 allowfullscreen></iframe>
+</div>
+
+<div class="card">
+<div class="title">🎯 本週作戰目標</div>
+<div style="font-size: 16px; line-height: 1.9; padding-left: 4px;">
+□ 行政法 §141<br>
+□ 行政罰法 §24<br>
+□ 長照2.0<br>
+□ 社會學理論<br>
+□ 原基法整理
+</div>
 </div>
 
 <div class="card" id="neglect-card" style="display:none;">
@@ -206,12 +207,13 @@ allowfullscreen></iframe>
 // 保留你原本設定好的 API 部署網址
 const API = "https://script.google.com/macros/s/AKfycbzaeVm6VLLh4xZqrCk7-xk8Dlt-fNaVxBJCDDF8MP3-T38VcZUEFyIlnDvdFzGnLtWF/exec";
 
+// ✨ 強化醒目版倒數計時函式
 function countdown(){
   const exam = new Date("2026-09-05").getTime();
   const now = new Date().getTime();
   const d = Math.floor((exam-now)/(1000*60*60*24));
   
-  // ✨ 這裡將數字單獨放大到 38px，使用主題的 var(--error) 紅褐色，更有警示感
+  // 數字獨立放大至 38px、加粗、使用警示紅褐色
   document.getElementById("countdown").innerHTML =
   d > 0 ? `🎯 距離考試還有 <span style="font-size: 38px; font-weight: 700; color: var(--error); vertical-align: -2px; margin: 0 4px;">${d}</span> 天` : "🔥 考試已到";
 }
