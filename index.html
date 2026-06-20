@@ -4,188 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>原特三等社會行政．上榜作戰系統</title>
-    <!-- 引入文青感 Google 字體 (明體) -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #fcfbfa; /* 大地色系/米白留白 */
+            --bg-color: #fcfbfa;
             --text-color: #332f2c;
-            --accent-color: #8c7b6e; /* 溫柔的大地棕 */
+            --accent-color: #8c7b6e;
             --border-color: #e6e3e0;
             --card-bg: #ffffff;
-            --success-color: #6e8c78; /* 內斂草綠 */
+            --success-color: #6e8c78;
         }
-
-        body {
-            font-family: 'Noto Serif TC', serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 40px 20px;
-            line-height: 1.8;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        /* 頂部文青風 Header */
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 30px;
-        }
-
-        h1 {
-            font-weight: 500;
-            letter-spacing: 2px;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        /* 倒數計時 Callout 區塊 */
-        .countdown-box {
-            background-color: #f4f1ee;
-            padding: 15px;
-            border-radius: 4px;
-            display: inline-block;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            margin-top: 15px;
-            border: 1px solid var(--border-color);
-        }
-
-        /* 主排版：左右二欄 */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .main-layout { grid-template-columns: 1fr; }
-        }
-
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            border-left: 3px solid var(--accent-color);
-            padding-left: 10px;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 25px;
-            border-radius: 4px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-
-        /* YouTube 播放器容器 */
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* 考科列表與進度條樣式 */
-        .subject-item {
-            margin-bottom: 20px;
-        }
-        .subject-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-        }
-        .progress-bar-bg {
-            background-color: #f0ede9;
-            height: 6px;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .progress-bar-fill {
-            background-color: var(--accent-color);
-            height: 100%;
-            width: 0%; /* 動態填入 */
-            transition: width 0.6s ease;
-        }
-
-        /* 文青風按鈕與輸入框 */
-        .btn-link {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            transition: opacity 0.2s;
-            border: none;
-            cursor: pointer;
-        }
+        body { font-family: 'Noto Serif TC', serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 40px 20px; line-height: 1.8; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 30px; }
+        h1 { font-weight: 500; letter-spacing: 2px; font-size: 2rem; margin-bottom: 10px; }
+        .countdown-box { background-color: #f4f1ee; padding: 15px; border-radius: 4px; display: inline-block; font-size: 1.1rem; letter-spacing: 1px; margin-top: 15px; border: 1px solid var(--border-color); }
+        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } }
+        .section-title { font-size: 1.2rem; font-weight: 700; border-left: 3px solid var(--accent-color); padding-left: 10px; margin-bottom: 20px; letter-spacing: 1px; }
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 25px; border-radius: 4px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 4px; border: 1px solid var(--border-color); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .subject-item { margin-bottom: 20px; }
+        .subject-info { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 5px; }
+        .progress-bar-bg { background-color: #f0ede9; height: 6px; border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { background-color: var(--accent-color); height: 100%; width: 0%; transition: width 0.6s ease; }
+        .btn-link { display: inline-block; background-color: var(--accent-color); color: white; text-decoration: none; padding: 10px 20px; border-radius: 4px; font-size: 0.9rem; letter-spacing: 1px; transition: opacity 0.2s; border: none; cursor: pointer; }
         .btn-link:hover { opacity: 0.9; }
-
-        .btn-line {
-            background-color: #06C755; /* LINE 官方綠色 */
-        }
-
-        .tag {
-            font-size: 0.75rem;
-            padding: 2px 6px;
-            border-radius: 3px;
-            background: #eae6e1;
-            margin-left: 5px;
-        }
-
-        /* 極簡表單樣式 */
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-family: 'Noto Serif TC', serif;
-            color: var(--text-color);
-            box-sizing: border-box;
-            background-color: #faf9f7;
-        }
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            background-color: #ffffff;
-        }
-        #form-status {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: var(--success-color);
-            display: none;
-        }
+        .btn-link:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-line { background-color: #06C755; }
+        .tag { font-size: 0.75rem; padding: 2px 6px; border-radius: 3px; background: #eae6e1; margin-left: 5px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.9rem; margin-bottom: 5px; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-family: 'Noto Serif TC', serif; color: var(--text-color); box-sizing: border-box; background-color: #faf9f7; }
+        .form-control:focus { outline: none; border-color: var(--accent-color); background-color: #ffffff; }
+        #form-status { margin-top: 10px; font-size: 0.9rem; color: var(--success-color); display: none; }
     </style>
 </head>
 <body>
@@ -197,22 +50,17 @@
     </header>
 
     <div class="main-layout">
-        <!-- 左側：作戰行動與外部連結 -->
         <div class="left-column">
-            
-            <!-- ⚡ 外部系統與 LINE 快捷聯網 -->
             <div class="card">
                 <div class="section-title">⚡ 外部系統快捷聯網</div>
                 <p>擺脫工具的卡頓，一鍵跳轉至你的雲端備考核心與通訊小幫手：</p>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn-link">打開 Google 學習試算表</a>
                     <a href="https://docs.google.com/document/" target="_blank" class="btn-link" style="background-color: #a39284;">打開 NotebookLM 筆記文件</a>
-                    <!-- https://qr-official.line.me/sid/L/775wqqqg.png -->
                     <a href="https://line.me/R/ti/p/@你的官方帳號ID" target="_blank" class="btn-link btn-line">打開 LINE 備考小幫手</a>
                 </div>
             </div>
 
-            <!-- ✍️ 即時讀書進度填寫（免開試算表，直接寫入 Google 並連動 LINE） -->
             <div class="card">
                 <div class="section-title">✍️ 紀錄今日步伐</div>
                 <p style="font-size: 0.85rem; color: #7a736e;">在此填寫將直接同步至 Google 試算表，並由 LINE 官方帳號發送進度回報。</p>
@@ -258,7 +106,6 @@
             </div>
         </div>
 
-        <!-- 右側：考科結構與進度監控 -->
         <div class="right-column">
             <div class="card">
                 <div class="section-title">📊 考科進度與精簡權重</div>
@@ -296,7 +143,6 @@
 </div>
 
 <script>
-    // 自動計算距離 2026 原特三等考試 (2026/09/05) 的倒數計時
     function updateCountdown() {
         const examDate = new Date("2026-09-05T00:00:00").getTime();
         const now = new Date().getTime();
@@ -315,52 +161,57 @@
     }
     updateCountdown();
 
-    // ==========================================
-    // 🔗 串接 GOOGLE 試算表 API 功能設定
-    // ==========================================
-    
-    // ⚠️ 請記得將下方引號內的網址，替換成你在 Google 部署的「網頁應用程式 (Web App) URL」
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjhJ-5ITmudLqeIx4FhozjZSO52JKLj1hIRT-pTpOckI9pA73npABu-fz3mXR-qR3C/exec";
+    // ⚠️ 請換成你「管理部署作業」(Manage deployments) 裡看到的正確網址
+    // 格式必須長這樣：https://script.google.com/macros/s/AKfycb.../exec
+    // 結尾一定是 /exec，不是 /dev
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/請換成你的部署ID/exec";
 
     document.getElementById('study-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // 防止網頁重整
+        e.preventDefault();
         
         const submitBtn = document.getElementById('submit-btn');
         const statusDiv = document.getElementById('form-status');
         
-        // 切換按鈕為讀取中狀態
         submitBtn.disabled = true;
         submitBtn.innerText = "正在傳送至 Google 與 LINE...";
         statusDiv.style.display = "none";
 
-        // ✨【核心修正】改用 URLSearchParams 封裝資料，這是穿透 no-cors 最完美且穩定的格式！
         const searchParams = new URLSearchParams();
         searchParams.append('subject', document.getElementById('form-subject').value);
         searchParams.append('hours', document.getElementById('form-hours').value);
         searchParams.append('summary', document.getElementById('form-summary').value);
         searchParams.append('status', document.getElementById('form-status-select').value);
 
-        // 發送 POST 請求給 Google Apps Script
+        // 拿掉 no-cors，改成可以讀到真實回應的請求
+        // 這樣才能真正知道是「送到了但 Apps Script 內部出錯」還是「根本沒送到」
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors', // 允許跨網域發送
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded' // 配合參數化傳遞
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: searchParams.toString() // 轉為標準表單參數字串
+            body: searchParams.toString()
         })
-        .then(() => {
-            // 在 no-cors 模式下，只要請求成功發出就會直接進入 .then()
-            // 顯示成功狀態
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP 錯誤，狀態碼: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
             statusDiv.style.display = "block";
-            statusDiv.style.color = "var(--success-color)";
-            statusDiv.innerText = "✨ 紀錄成功！進度已同步，LINE 通知已發送。";
-            
-            // 清空表單數值
-            document.getElementById('form-hours').value = '';
-            document.getElementById('form-summary').value = '';
-            
-            // 恢復按鈕狀態
+
+            if (data && data.status === 'success') {
+                statusDiv.style.color = "var(--success-color)";
+                statusDiv.innerText = "✨ 紀錄成功！進度已同步，LINE 通知已發送。";
+
+                document.getElementById('form-hours').value = '';
+                document.getElementById('form-summary').value = '';
+            } else {
+                // Apps Script 收到請求，但內部處理失敗（例如寫入試算表或呼叫 LINE API 出錯）
+                statusDiv.style.color = "#8c6e6e";
+                statusDiv.innerText = "❌ Google 端處理失敗：" + (data && data.message ? data.message : "未知錯誤，請檢查 Apps Script 執行記錄");
+            }
+
             submitBtn.disabled = false;
             submitBtn.innerText = "送出今日讀書紀錄";
         })
@@ -368,7 +219,8 @@
             console.error('Error:', error);
             statusDiv.style.display = "block";
             statusDiv.style.color = "#8c6e6e";
-            statusDiv.innerText = "❌ 傳送失敗，請檢查網路或 API 設定。";
+            // 常見原因：網址還是 xxxx 預留值、網址結尾不是 /exec、CORS 被擋、或部署權限不是「任何人」
+            statusDiv.innerText = "❌ 傳送失敗：" + error.message + "（請確認 GOOGLE_SCRIPT_URL 是否已換成正確網址）";
             submitBtn.disabled = false;
             submitBtn.innerText = "送出今日讀書紀錄";
         });
