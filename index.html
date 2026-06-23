@@ -243,7 +243,7 @@ const API = "https://script.google.com/macros/s/AKfycbzaeVm6VLLh4xZqrCk7-xk8Dlt-
 let myMusicPool = [];
 
 function initMusicCenter() {
-  const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc", "jfKfPfyJRdk"];
+  const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc", "LjRygr4xR7g", "nF1fSKEiyA0", "q8nPaqfRm_c", "z-j6jsLtgjs"];
   const savedPool = localStorage.getItem("custom_music_pool");
   
   if (savedPool) {
@@ -323,7 +323,7 @@ function updatePlaylistDOM() {
 }
 
 function clearCustomPlaylist() {
-  if (confirm("確定要清空自訂歌單並還原成預設的 3 首音樂嗎？")) {
+  if (confirm("確定要清空自訂歌單並還原成預設的 6 首音樂嗎？")) {
     const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc", "jfKfPfyJRdk"];
     myMusicPool = defaultPool;
     localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
