@@ -240,12 +240,12 @@ allowfullscreen></iframe>
 <script>
 const API = "https://script.google.com/macros/s/AKfycbzaeVm6VLLh4xZqrCk7-xk8Dlt-fNaVxBJCDDF8MP3-T38VcZUEFyIlnDvdFzGnLtWF/exec";
 
+// 🏆 100% 精選可用於嵌入式播放器的 6 首專注輕音樂 ID 清單
+const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc", "jfKfPfyJRdk", "tNkZs56_9gI", "S3MvKWe_6v0", "DWvZInZ6eDo"];
 let myMusicPool = [];
 
 function initMusicCenter() {
-  const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc", "LjRygr4xR7g", "nF1fSKEiyA0", "q8nPaqfRm_c", "z-j6jsLtgjs"];
   const savedPool = localStorage.getItem("custom_music_pool");
-  
   if (savedPool) {
     try {
       myMusicPool = JSON.parse(savedPool);
@@ -284,15 +284,12 @@ function addMusicToPool() {
   }
 
   let videoId = "";
-
-  // 1. 最保險的正規判定法
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = rawUrl.match(regExp);
+  
   if (match && match[2].length === 11) {
     videoId = match[2];
-  } 
-  // 2. 後備機制：用萬用切分法拿 ID
-  else if (rawUrl.includes("v=")) {
+  } else if (rawUrl.includes("v=")) {
     videoId = rawUrl.split("v=")[1].substring(0, 11);
   } else if (rawUrl.includes("youtu.be/")) {
     videoId = rawUrl.split("youtu.be/")[1].substring(0, 11);
@@ -324,8 +321,7 @@ function updatePlaylistDOM() {
 
 function clearCustomPlaylist() {
   if (confirm("確定要清空自訂歌單並還原成預設的 6 首音樂嗎？")) {
-    const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc", "jfKfPfyJRdk"];
-    myMusicPool = defaultPool;
+    myMusicPool = [...defaultPool];
     localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
     updatePlaylistDOM();
     playRandomKey();
