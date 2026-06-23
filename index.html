@@ -116,24 +116,24 @@ button:disabled{
   font-size:16px; 
 }
 
-/* 自訂歌單控制區塊排版 */
+/* 確保自訂歌單控制區塊排版不跑位 */
 .music-control-group {
   margin-top: 10px; 
   display: flex; 
   gap: 6px;
 }
 .music-control-group input {
-  margin-top: 0; 
-  padding: 8px 10px; 
-  font-size: 14px; 
-  flex: 1;
+  margin-top: 0 !important; 
+  padding: 8px 10px !important; 
+  font-size: 14px !important; 
+  flex: 1 !important;
 }
 .music-control-group button {
-  margin-top: 0; 
-  padding: 8px 12px; 
-  font-size: 14px; 
-  width: auto; 
-  white-space: nowrap;
+  margin-top: 0 !important; 
+  padding: 8px 12px !important; 
+  font-size: 14px !important; 
+  width: auto !important; 
+  white-space: nowrap !important;
 }
 .playlist-count {
   font-size: 13px;
@@ -156,7 +156,6 @@ button:disabled{
 <div class="grid">
 
 <div>
-
 <div class="card">
 <div class="title">📝 今日讀書紀錄</div>
 
@@ -172,7 +171,7 @@ button:disabled{
 <textarea id="summary" placeholder="今日摘要（法條/概念/錯題）" rows="4"></textarea>
 
 <select id="status">
-<option>複婚中</option>
+<option>複習中</option>
 <option>已讀完</option>
 <option>已精通</option>
 </select>
@@ -185,12 +184,9 @@ button:disabled{
 <div class="title">📌 待複習提醒</div>
 <div id="reviewBox" class="small">⏳ 雲端同步中...</div>
 </div>
-
 </div>
 
-
 <div>
-
 <div class="card youtube-card">
 <div class="title">☕ 專注音樂</div>
 <iframe id="focus-music-player" width="100%" height="160"
@@ -236,18 +232,14 @@ allowfullscreen></iframe>
 <div class="title">⚖️ 戰情中心</div>
 <div id="dashboard" class="small">⏳ 雲端同步中...</div>
 </div>
-
 </div>
 
 </div>
 </div>
 
 <script>
-
-// 保留你原本設定好的 API 部署網址
 const API = "https://script.google.com/macros/s/AKfycbzaeVm6VLLh4xZqrCk7-xk8Dlt-fNaVxBJCDDF8MP3-T38VcZUEFyIlnDvdFzGnLtWF/exec";
 
-// 🎵 補齊隨機音樂後台控制陣列與功能
 let myMusicPool = [];
 
 function initMusicCenter() {
@@ -255,12 +247,19 @@ function initMusicCenter() {
   const savedPool = localStorage.getItem("custom_music_pool");
   
   if (savedPool) {
-    myMusicPool = JSON.parse(savedPool);
+    try {
+      myMusicPool = JSON.parse(savedPool);
+      if (!Array.isArray(myMusicPool) || myMusicPool.length === 0) {
+        myMusicPool = defaultPool;
+      }
+    } catch(e) {
+      myMusicPool = defaultPool;
+    }
   } else {
     myMusicPool = defaultPool;
-    localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
   }
   
+  localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
   updatePlaylistDOM();
   playRandomKey(); 
 }
@@ -272,12 +271,12 @@ function playRandomKey() {
   }
   const randomIndex = Math.floor(Math.random() * myMusicPool.length);
   const selectedId = myMusicPool[randomIndex];
-  document.getElementById("focus-music-player").src = `https://www.youtube.com/embed/${selectedId}?autoplay=1&mute=1`;
+  document.getElementById("focus-music-player").src = "https://www.youtube.com/embed/" + selectedId + "?autoplay=1&mute=1";
 }
 
 function addMusicToPool() {
   const urlField = document.getElementById("music-url");
-  const rawUrl = urlField.value.trim();
+  let rawUrl = urlField.value.trim();
   
   if (!rawUrl) {
     alert("📌 請先貼上 YouTube 影片網址！");
@@ -286,23 +285,18 @@ function addMusicToPool() {
 
   let videoId = "";
 
-  if (rawUrl.includes("v=")) {
-    const urlParams = new URLSearchParams(rawUrl.split('?')[1]);
-    videoId = urlParams.get('v');
+  // 1. 最保險的正規判定法
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = rawUrl.match(regExp);
+  if (match && match[2].length === 11) {
+    videoId = match[2];
   } 
-  else if (rawUrl.includes("youtu.be/")) {
-    const parts = rawUrl.split("youtu.be/");
-    if (parts[1]) {
-      videoId = parts[1].split(/[?#&]/)[0];
-    }
-  } 
-  else if (rawUrl.includes("embed/")) {
-    const parts = rawUrl.split("embed/");
-    if (parts[1]) {
-      videoId = parts[1].split(/[?#&]/)[0];
-    }
-  } 
-  else if (rawUrl.length === 11) {
+  // 2. 後備機制：用萬用切分法拿 ID
+  else if (rawUrl.includes("v=")) {
+    videoId = rawUrl.split("v=")[1].substring(0, 11);
+  } else if (rawUrl.includes("youtu.be/")) {
+    videoId = rawUrl.split("youtu.be/")[1].substring(0, 11);
+  } else if (rawUrl.length === 11) {
     videoId = rawUrl;
   }
 
@@ -318,14 +312,14 @@ function addMusicToPool() {
     
     updatePlaylistDOM();
     urlField.value = "";
-    alert("✨ 成功加入隨機池！目前歌單總數增加了。");
+    alert("✨ 成功加入隨機池！目前隨機池共有 " + myMusicPool.length + " 首歌。");
   } else {
-    alert("❌ 無法識別此網址。請確認是 YouTube 的影片連結（例如：https://www.youtube.com/watch?v=...）");
+    alert("❌ 無法識別網址！請試著直接複製 YouTube 網址列整串（例如：https://www.youtube.com/watch?v=OS8lnKZdJYc）並貼上來。");
   }
 }
 
 function updatePlaylistDOM() {
-  document.getElementById("playlist-info").innerText = `📊 隨機池共 ${myMusicPool.length} 首歌`;
+  document.getElementById("playlist-info").innerText = "📊 隨機池共 " + myMusicPool.length + " 首歌";
 }
 
 function clearCustomPlaylist() {
@@ -338,13 +332,12 @@ function clearCustomPlaylist() {
   }
 }
 
-// ⏳ 倒數計時功能
 function countdown(){
   const exam = new Date("2026-09-05").getTime();
   const now = new Date().getTime();
   const d = Math.floor((exam-now)/(1000*60*60*24));
   document.getElementById("countdown").innerHTML =
-  d > 0 ? `🎯 距離考試還有 <span style="font-size: 38px; font-weight: 700; color: var(--error); vertical-align: -2px; margin: 0 4px;">${d}</span> 天` : "🔥 考試已到";
+  d > 0 ? "🎯 距離考試還有 <span style='font-size: 38px; font-weight: 700; color: var(--error); vertical-align: -2px; margin: 0 4px;'>" + d + "</span> 天" : "🔥 考試已到";
 }
 
 function submitData(){
@@ -378,12 +371,11 @@ function submitData(){
     body: body.toString()
   })
   .then(r => {
-    if(!r.ok) throw new Error(`HTTP 錯誤，狀態碼: ${r.status}`);
+    if(!r.ok) throw new Error("HTTP 錯誤");
     return r.json();
   })
   .then(data => {
     statusDiv.style.display = "block";
-
     if(data && data.status === 'success'){
       statusDiv.style.color = "var(--accent)";
       statusDiv.innerText = "✨ 紀錄成功！進度已同步，LINE 通知已發送。";
@@ -392,17 +384,15 @@ function submitData(){
       load();
     } else {
       statusDiv.style.color = "var(--error)";
-      statusDiv.innerText = "❌ Google 端處理失敗：" + (data && data.message ? data.message : "未知錯誤");
+      statusDiv.innerText = "❌ 處理失敗";
     }
-
     submitBtn.disabled = false;
     submitBtn.innerText = "送出紀錄";
   })
   .catch(error => {
-    console.error('Error:', error);
     statusDiv.style.display = "block";
     statusDiv.style.color = "var(--error)";
-    statusDiv.innerText = "❌ 傳送失敗：" + error.message + "（請確認 API 網址是否正確）";
+    statusDiv.innerText = "❌ 傳送失敗";
     submitBtn.disabled = false;
     submitBtn.innerText = "送出紀錄";
   });
@@ -413,23 +403,16 @@ function load(){
   document.getElementById("reviewBox").innerHTML = "⏳ 雲端同步中...";
 
   fetch(API + "?action=getProgress")
-  .then(r => {
-    if(!r.ok) throw new Error(`HTTP 錯誤，狀態碼: ${r.status}`);
-    return r.json();
-  })
+  .then(r => r.json())
   .then(data => {
     if(data && data.status === 'success' && data.subjects){
       render(data.subjects);
       renderNeglected(data.neglectedSubjects || []);
       renderReviewDue(data.reviewDueSubjects || []);
-    } else {
-      document.getElementById("dashboard").innerHTML = "⚠️ 同步失敗：" + (data && data.message ? data.message : "未知錯誤");
-      document.getElementById("reviewBox").innerHTML = "⚠️ 同步失敗";
     }
   })
   .catch(error => {
-    console.error('讀取雲端進度失敗:', error);
-    document.getElementById("dashboard").innerHTML = "⚠️ 無法連線雲端，請檢查網路或 API 設定";
+    document.getElementById("dashboard").innerHTML = "⚠️ 無法連線雲端";
     document.getElementById("reviewBox").innerHTML = "⚠️ 無法連線雲端";
   });
 }
@@ -437,11 +420,7 @@ function load(){
 function render(data){
   let html = "";
   for(let k in data){
-    html += `
-    <div style="margin-bottom:16px;">
-      <b style="font-size:17px;">${k}</b> <span class="small">共讀 ${data[k].totalHours} 小時・${data[k].count} 次</span><br>
-      <span style="font-size:14px; color:var(--text);">${data[k].latestSummary}</span>
-    </div>`;
+    html += "<div style='margin-bottom:16px;'><b style='font-size:17px;'>" + k + "</b> <span class='small'>共讀 " + data[k].totalHours + " 小時・" + data[k].count + " 次</span><br><span style='font-size:14px; color:var(--text);'>" + data[k].latestSummary + "</span></div>";
   }
   document.getElementById("dashboard").innerHTML = html || "尚無紀錄";
 }
@@ -449,38 +428,22 @@ function render(data){
 function renderNeglected(list){
   const card = document.getElementById("neglect-card");
   const box = document.getElementById("neglectBox");
-
-  if(!list || list.length === 0){
-    card.style.display = "none";
-    return;
-  }
-
+  if(!list || list.length === 0){ card.style.display = "none"; return; }
   card.style.display = "block";
   let html = "";
   list.forEach(item => {
-    const daysText = item.daysSinceLast === null
-      ? "從微開始"
-      : `${item.daysSinceLast} 天沒讀了`;
-    html += `<div style="margin-bottom:8px; font-size:16px;">🔸 <b>${item.subject}</b> ${daysText}</div>`;
+    const daysText = item.daysSinceLast === null ? "從未開始" : item.daysSinceLast + " 天沒讀了";
+    html += "<div style='margin-bottom:8px; font-size:16px;'>🔸 <b>" + item.subject + "</b> " + daysText + "</div>";
   });
   box.innerHTML = html;
 }
 
 function renderReviewDue(list){
   const box = document.getElementById("reviewBox");
-
-  if(!list || list.length === 0){
-    box.innerHTML = "目前沒有待複習的科目，繼續保持！";
-    return;
-  }
-
+  if(!list || list.length === 0){ box.innerHTML = "目前沒有待複習的科目，繼續保持！"; return; }
   let html = "";
   list.forEach(item => {
-    html += `
-    <div style="margin-bottom:14px; line-height:1.6;">
-      📌 <b style="font-size:16px;">${item.subject}</b> 已 ${item.daysSinceLast} 天沒回顧<br>
-      <span style="font-size:14px; background:#fffcf7; padding:2px 6px; border:1px dashed var(--line); display:inline-block; margin-top:4px;">${item.summary}</span>
-    </div>`;
+    html += "<div style='margin-bottom:14px; line-height:1.6;'>📌 <b style='font-size:16px;'>" + item.subject + "</b> 已 " + item.daysSinceLast + " 天沒回顧<br><span style='font-size:14px; background:#fffcf7; padding:2px 6px; border:1px dashed var(--line); display:inline-block; margin-top:4px;'>" + item.summary + "</span></div>";
   });
   box.innerHTML = html;
 }
@@ -489,7 +452,6 @@ function renderReviewDue(list){
 countdown();
 initMusicCenter(); 
 load();
-
 </script>
 
 </body>
