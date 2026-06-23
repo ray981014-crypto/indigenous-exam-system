@@ -45,7 +45,7 @@ h1{
   border:1px solid var(--line);
   padding:15px;
   margin-top:10px;
-  font-size: 20px; /* ✨ 稍微加大倒數卡片字體 */
+  font-size: 20px; 
 }
 
 .grid{
@@ -115,6 +115,32 @@ button:disabled{
   margin-bottom:8px;
   font-size:16px; 
 }
+
+/* 自訂歌單控制區塊排版 */
+.music-control-group {
+  margin-top: 10px; 
+  display: flex; 
+  gap: 6px;
+}
+.music-control-group input {
+  margin-top: 0; 
+  padding: 8px 10px; 
+  font-size: 14px; 
+  flex: 1;
+}
+.music-control-group button {
+  margin-top: 0; 
+  padding: 8px 12px; 
+  font-size: 14px; 
+  width: auto; 
+  white-space: nowrap;
+}
+.playlist-count {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+  text-align: right;
+}
 </style>
 </head>
 
@@ -146,7 +172,7 @@ button:disabled{
 <textarea id="summary" placeholder="今日摘要（法條/概念/錯題）" rows="4"></textarea>
 
 <select id="status">
-<option>複習中</option>
+<option>複婚中</option>
 <option>已讀完</option>
 <option>已精通</option>
 </select>
@@ -185,33 +211,19 @@ allowfullscreen></iframe>
   <button onclick="addMusicToPool()" style="background: var(--accent);">➕ 新增</button>
   <button onclick="clearCustomPlaylist()" style="background: var(--error); padding: 8px;">🧹 清空</button>
 </div>
-
-<div class="music-control-group">
-  <input id="music-url" type="text" placeholder="貼上 YouTube 網址擴充隨機歌單...">
-  <button onclick="addMusicToPool()" style="background: var(--accent);">➕ 新增</button>
-  <button onclick="clearCustomPlaylist()" style="background: var(--error); padding: 8px;">🧹 清空</button>
 </div>
+
 <div class="card">
   <div class="title">🎯 本週作戰目標（6/22–6/28）</div>
-
   <div style="font-size:16px; line-height:1.9; padding-left:4px;">
-
     □ 行政法 §135～§140 行政契約<br>
-
     □ 少子女化政策（托育公共化、育兒津貼、托育補助）<br>
-
     □ 生態系統理論（微視、中介、外部、鉅視系統）<br>
-
     □ 布迪厄：文化資本、社會資本、象徵資本<br>
-
     □ 原住民族教育法（民族教育、實驗教育、師資培育）<br>
-
     □ 行政契約 vs 行政處分 比較表完成<br>
-
     □ 少子女化申論骨架完成 1 題<br>
-
     □ 原教法選擇題 20 題＋錯題整理<br>
-
   </div>
 </div>
 
@@ -235,17 +247,105 @@ allowfullscreen></iframe>
 // 保留你原本設定好的 API 部署網址
 const API = "https://script.google.com/macros/s/AKfycbzaeVm6VLLh4xZqrCk7-xk8Dlt-fNaVxBJCDDF8MP3-T38VcZUEFyIlnDvdFzGnLtWF/exec";
 
-// ✨ 強化醒目版倒數計時函式
+// 🎵 補齊隨機音樂後台控制陣列與功能
+let myMusicPool = [];
+
+function initMusicCenter() {
+  const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc", "jfKfPfyJRdk"];
+  const savedPool = localStorage.getItem("custom_music_pool");
+  
+  if (savedPool) {
+    myMusicPool = JSON.parse(savedPool);
+  } else {
+    myMusicPool = defaultPool;
+    localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
+  }
+  
+  updatePlaylistDOM();
+  playRandomKey(); 
+}
+
+function playRandomKey() {
+  if (myMusicPool.length === 0) {
+    document.getElementById("focus-music-player").src = "";
+    return;
+  }
+  const randomIndex = Math.floor(Math.random() * myMusicPool.length);
+  const selectedId = myMusicPool[randomIndex];
+  document.getElementById("focus-music-player").src = `https://www.youtube.com/embed/${selectedId}?autoplay=1&mute=1`;
+}
+
+function addMusicToPool() {
+  const urlField = document.getElementById("music-url");
+  const rawUrl = urlField.value.trim();
+  
+  if (!rawUrl) {
+    alert("📌 請先貼上 YouTube 影片網址！");
+    return;
+  }
+
+  let videoId = "";
+
+  if (rawUrl.includes("v=")) {
+    const urlParams = new URLSearchParams(rawUrl.split('?')[1]);
+    videoId = urlParams.get('v');
+  } 
+  else if (rawUrl.includes("youtu.be/")) {
+    const parts = rawUrl.split("youtu.be/");
+    if (parts[1]) {
+      videoId = parts[1].split(/[?#&]/)[0];
+    }
+  } 
+  else if (rawUrl.includes("embed/")) {
+    const parts = rawUrl.split("embed/");
+    if (parts[1]) {
+      videoId = parts[1].split(/[?#&]/)[0];
+    }
+  } 
+  else if (rawUrl.length === 11) {
+    videoId = rawUrl;
+  }
+
+  if (videoId && videoId.length === 11) {
+    if (myMusicPool.includes(videoId)) {
+      alert("💡 這首歌已經在你的隨機抽籤池裡囉！");
+      urlField.value = "";
+      return;
+    }
+    
+    myMusicPool.push(videoId);
+    localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
+    
+    updatePlaylistDOM();
+    urlField.value = "";
+    alert("✨ 成功加入隨機池！目前歌單總數增加了。");
+  } else {
+    alert("❌ 無法識別此網址。請確認是 YouTube 的影片連結（例如：https://www.youtube.com/watch?v=...）");
+  }
+}
+
+function updatePlaylistDOM() {
+  document.getElementById("playlist-info").innerText = `📊 隨機池共 ${myMusicPool.length} 首歌`;
+}
+
+function clearCustomPlaylist() {
+  if (confirm("確定要清空自訂歌單並還原成預設的 3 首音樂嗎？")) {
+    const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc", "jfKfPfyJRdk"];
+    myMusicPool = defaultPool;
+    localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
+    updatePlaylistDOM();
+    playRandomKey();
+  }
+}
+
+// ⏳ 倒數計時功能
 function countdown(){
   const exam = new Date("2026-09-05").getTime();
   const now = new Date().getTime();
   const d = Math.floor((exam-now)/(1000*60*60*24));
-  
-  // 數字獨立放大至 38px、加粗、使用警示紅褐色
   document.getElementById("countdown").innerHTML =
   d > 0 ? `🎯 距離考試還有 <span style="font-size: 38px; font-weight: 700; color: var(--error); vertical-align: -2px; margin: 0 4px;">${d}</span> 天` : "🔥 考試已到";
 }
-countdown();
 
 function submitData(){
   const subject = document.getElementById('subject').value;
@@ -359,7 +459,7 @@ function renderNeglected(list){
   let html = "";
   list.forEach(item => {
     const daysText = item.daysSinceLast === null
-      ? "從未開始"
+      ? "從微開始"
       : `${item.daysSinceLast} 天沒讀了`;
     html += `<div style="margin-bottom:8px; font-size:16px;">🔸 <b>${item.subject}</b> ${daysText}</div>`;
   });
@@ -385,6 +485,9 @@ function renderReviewDue(list){
   box.innerHTML = html;
 }
 
+// 🌐 啟動執行
+countdown();
+initMusicCenter(); 
 load();
 
 </script>
