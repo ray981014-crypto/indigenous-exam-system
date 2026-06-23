@@ -240,8 +240,8 @@ allowfullscreen></iframe>
 <script>
 const API = "https://script.google.com/macros/s/AKfycbzaeVm6VLLh4xZqrCk7-xk8Dlt-fNaVxBJCDDF8MP3-T38VcZUEFyIlnDvdFzGnLtWF/exec";
 
-// 🏆 100% 精選可用於嵌入式播放器的 6 首專注輕音樂 ID 清單
-const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc", "ATOPZqUfzUo", "tNkZs56_9gI", "TcqnGPQME", "DWvZInZ6eDo"];
+// 🏆 100% 精選可用於嵌入式播放器的 2 首專注輕音樂 ID 清單
+const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc"];
 let myMusicPool = [];
 
 function initMusicCenter() {
@@ -320,7 +320,7 @@ function updatePlaylistDOM() {
 }
 
 function clearCustomPlaylist() {
-  if (confirm("確定要清空自訂歌單並還原成預設的 6 首音樂嗎？")) {
+  if (confirm("確定要清空自訂歌單並還原成預設的 2 首音樂嗎？")) {
     myMusicPool = [...defaultPool];
     localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
     updatePlaylistDOM();
