@@ -167,15 +167,24 @@ button:disabled{
 
 <div class="card youtube-card">
 <div class="title">☕ 專注音樂</div>
-<iframe width="100%" height="160"
-src="https://www.youtube.com/embed/OS8lnKZdJYc?autoplay=1&mute=1"
+<iframe id="focus-music-player" width="100%" height="160"
+src=""
 title="YouTube video player"
 frameborder="0"
 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 referrerpolicy="strict-origin-when-cross-origin"
 allowfullscreen></iframe>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+  <div id="playlist-info" class="playlist-count">📊 歌單內共有 0 首歌</div>
+  <button onclick="playRandomKey()" style="margin-top:0; width:auto; padding:5px 12px; font-size:13px; background:#a89a8d;">🎲 隨機換一首</button>
 </div>
 
+<div class="music-control-group">
+  <input id="music-url" type="text" placeholder="貼上 YouTube 網址擴充隨機歌單...">
+  <button onclick="addMusicToPool()" style="background: var(--accent);">➕ 新增</button>
+  <button onclick="clearCustomPlaylist()" style="background: var(--error); padding: 8px;">🧹 清空</button>
+</div>
 <div class="card">
   <div class="title">🎯 本週作戰目標（6/22–6/28）</div>
 
