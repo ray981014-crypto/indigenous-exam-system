@@ -240,7 +240,7 @@ allowfullscreen></iframe>
 <script>
 const API = "https://script.google.com/macros/s/AKfycbzaeVm6VLLh4xZqrCk7-xk8Dlt-fNaVxBJCDDF8MP3-T38VcZUEFyIlnDvdFzGnLtWF/exec";
 
-// 🏆 100% 精選可用於嵌入式播放器的 2 首專注輕音樂 ID 清單
+// 🏆 精選預設 2 首可用於嵌入播放器的專注音樂 ID
 const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc"];
 let myMusicPool = [];
 
@@ -250,13 +250,13 @@ function initMusicCenter() {
     try {
       myMusicPool = JSON.parse(savedPool);
       if (!Array.isArray(myMusicPool) || myMusicPool.length === 0) {
-        myMusicPool = defaultPool;
+        myMusicPool = [...defaultPool];
       }
     } catch(e) {
-      myMusicPool = defaultPool;
+      myMusicPool = [...defaultPool];
     }
   } else {
-    myMusicPool = defaultPool;
+    myMusicPool = [...defaultPool];
   }
   
   localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
