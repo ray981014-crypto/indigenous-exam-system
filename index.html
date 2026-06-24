@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>原特三等社會行政｜作戰指揮中心 V2</title>
+<title>原特三等社會行政｜作戰指揮中心 V4</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
 
@@ -16,6 +16,7 @@
   --line:#e7e3df;
   --accent:#8c7b6e;
   --error:#a35d5d;
+  --success:#5da373;
 }
 
 body{
@@ -27,7 +28,32 @@ body{
   line-height:1.7;
 }
 
-.container{max-width:1100px;margin:auto;padding:40px 20px;}
+/* 🧭 頂部導覽列樣式 */
+.nav-bar {
+  background: #2f2b28;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-logo {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.nav-links a {
+  color: #e7e3df;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 15px;
+  transition: color 0.3s;
+}
+.nav-links a:hover, .nav-links a.active {
+  color: #c9b097;
+  border-bottom: 2px solid #c9b097;
+}
+
+.container{max-width:1100px;margin:auto;padding:30px 20px;}
 
 header{
   text-align:center;
@@ -38,14 +64,39 @@ h1{
   font-weight:500;
   letter-spacing:2px;
   font-size: 32px; 
+  margin-top: 10px;
 }
 
 .callout{
   background:#f3f0ec;
   border:1px solid var(--line);
-  padding:15px;
+  padding:20px;
   margin-top:10px;
   font-size: 20px; 
+}
+
+/* 📊 視覺化進度條樣式 */
+.progress-container {
+  width: 100%;
+  background: var(--line);
+  border-radius: 8px;
+  margin-top: 12px;
+  height: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--error));
+  width: 0%;
+  transition: width 1s ease-in-out;
+}
+.progress-text {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+  text-align: right;
+  display: block;
 }
 
 .grid{
@@ -116,7 +167,62 @@ button:disabled{
   font-size:16px; 
 }
 
-/* 確保自訂歌單控制區塊排版不跑位 */
+/* 🎛️ 音樂高階控制面板 UI */
+.custom-audio-panel {
+  background: #fdfdfd;
+  border: 1px solid var(--line);
+  padding: 12px;
+  margin-top: 10px;
+}
+.audio-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.audio-info-text {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+.volume-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.volume-group span {
+  font-size: 13px;
+  color: var(--text);
+}
+.volume-slider {
+  width: 80px !important;
+  margin-top: 0 !important;
+  cursor: pointer;
+}
+
+/* 📝 作戰目標動態清單排版 */
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.todo-item input {
+  width: auto !important;
+  margin-top: 6px !important;
+  margin-right: 10px !important;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+.todo-text.completed {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
 .music-control-group {
   margin-top: 10px; 
   display: flex; 
@@ -146,11 +252,26 @@ button:disabled{
 
 <body>
 
+<nav class="nav-bar">
+  <div class="nav-logo">🏛️ 國考戰情系統</div>
+  <div class="nav-links">
+    <a href="#" class="active">主控面板</a>
+    <a href="#" onclick="alert('💡 歷屆資料庫分頁預留位置（未來可連接至獨立題庫網頁）')">法規與題庫</a>
+    <a href="#" onclick="alert('💡 申論模擬訓練頁預留位置')">申論模擬</a>
+  </div>
+</nav>
+
 <div class="container">
 
 <header>
   <h1>115年原特三等｜社會行政準備紀錄區</h1>
-  <div class="callout" id="countdown"></div>
+  <div class="callout">
+    <div id="countdown"></div>
+    <div class="progress-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <span id="progress-text" class="progress-text">⏳ 戰情精算中...</span>
+  </div>
 </header>
 
 <div class="grid">
@@ -189,13 +310,20 @@ button:disabled{
 <div>
 <div class="card youtube-card">
 <div class="title">☕ 專注音樂</div>
-<iframe id="focus-music-player" width="100%" height="160"
-src=""
-title="YouTube video player"
-frameborder="0"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-referrerpolicy="strict-origin-when-cross-origin"
-allowfullscreen></iframe>
+
+<div id="focus-music-player"></div>
+
+<div class="custom-audio-panel">
+  <div class="audio-row-top">
+    <button id="play-pause-btn" onclick="togglePlayState()" style="margin-top:0; width:auto; padding:4px 14px; font-size:13px; background:var(--accent);"> ⏸️ </button>
+    <div id="current-track-id" class="audio-info-text">🎵 載入音樂中...</div>
+    <div class="volume-group">
+      <span>🔈</span>
+      <input type="range" class="volume-slider" min="0" max="100" value="30" oninput="adjustVolume(this.value)">
+      <span>🔊</span>
+    </div>
+  </div>
+</div>
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
   <div id="playlist-info" class="playlist-count">📊 隨機池共 0 首歌</div>
@@ -211,16 +339,7 @@ allowfullscreen></iframe>
 
 <div class="card">
   <div class="title">🎯 本週作戰目標（6/22–6/28）</div>
-  <div style="font-size:16px; line-height:1.9; padding-left:4px;">
-    □ 行政法 §135～§140 行政契約<br>
-    □ 少子女化政策（托育公共化、育兒津貼、托育補助）<br>
-    □ 生態系統理論（微視、中介、外部、鉅視系統）<br>
-    □ 布迪厄：文化資本、社會資本、象徵資本<br>
-    □ 原住民族教育法（民族教育、實驗教育、師資培育）<br>
-    □ 行政契約 vs 行政處分 比較表完成<br>
-    □ 少子女化申論骨架完成 1 題<br>
-    □ 原教法選擇題 20 題＋錯題整理<br>
-  </div>
+  <div id="todo-container" style="padding-left:4px;"></div>
 </div>
 
 <div class="card" id="neglect-card" style="display:none;">
@@ -237,12 +356,123 @@ allowfullscreen></iframe>
 </div>
 </div>
 
+<script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
 const API = "https://script.google.com/macros/s/AKfycbzaeVm6VLLh4xZqrCk7-xk8Dlt-fNaVxBJCDDF8MP3-T38VcZUEFyIlnDvdFzGnLtWF/exec";
 
-// 🏆 精選預設 2 首可用於嵌入播放器的專注音樂 ID
 const defaultPool = ["OS8lnKZdJYc", "5Q2Pc-e-8Qc"];
 let myMusicPool = [];
+let ytPlayer = null; // 全局 YouTube 播放器實例
+
+const defaultTargets = [
+  "行政法 §135～§140 行政契約",
+  "少子女化政策（托育公共化、育兒津貼、托育補助）",
+  "生態系統理論（微視、中介、外部、鉅視系統）",
+  "布迪厄：文化資本、社會資本、象徵資本",
+  "原住民族教育法（民族教育、實驗教育、師資培育）",
+  "行政契約 vs 行政處分 比較表完成",
+  "少子女化申論骨架完成 1 題",
+  "原教法選擇題 20 題＋錯題整理"
+];
+
+// 🎨 升級功能 1：倒數計時與時間軸視覺化進度條
+function countdown(){
+  const startDate = new Date("2026-01-01").getTime(); // 衝刺起跑點設定
+  const examDate = new Date("2026-09-05").getTime();  // 考試日期
+  const nowDate = new Date().getTime();
+  
+  // 計算剩餘天數
+  const d = Math.floor((examDate - nowDate) / (1000 * 60 * 60 * 24));
+  document.getElementById("countdown").innerHTML =
+  d > 0 ? "🎯 距離考試還有 <span style='font-size: 38px; font-weight: 700; color: var(--error); vertical-align: -2px; margin: 0 4px;'>" + d + "</span> 天" : "🔥 考試已到";
+
+  // 計算時間消耗百分比
+  const totalDuration = examDate - startDate;
+  const elapsedDuration = nowDate - startDate;
+  let percent = Math.floor((elapsedDuration / totalDuration) * 100);
+  
+  if (percent < 0) percent = 0;
+  if (percent > 100) percent = 100;
+  
+  // 更新進度條 UI
+  document.getElementById("progress-bar").style.width = percent + "%";
+  document.getElementById("progress-text").innerText = "⏳ 115年備考時間軸已推進 " + percent + "%";
+}
+
+// 🎨 升級功能 2：YouTube Player API 核心架構
+function onYouTubeIframeAPIReady() {
+  initMusicCenter(); // 先讀取歌單池資料
+  
+  if (myMusicPool.length === 0) return;
+  const initialId = myMusicPool[Math.floor(Math.random() * myMusicPool.length)];
+
+  ytPlayer = new YT.Player('focus-music-player', {
+    height: '160',
+    width: '100%',
+    videoId: initialId,
+    playerVars: {
+      'autoplay': 1,
+      'mute': 1,       // 遵守瀏覽器安全機制，預設靜音啟動
+      'controls': 1,   // 保留基礎控制
+      'rel': 0
+    },
+    events: {
+      'onReady': (event) => {
+        document.getElementById("current-track-id").innerText = "🎵 ID: " + initialId;
+        ytPlayer.setVolume(30); // 預設 30% 音量
+      },
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+
+function onPlayerStateChange(event) {
+  const btn = document.getElementById("play-pause-btn");
+  // YT.PlayerState.PLAYING = 1, PAUSED = 2
+  if (event.data === 1) {
+    btn.innerText = "⏸️ 暫停";
+    btn.style.background = "var(--accent)";
+  } else if (event.data === 2) {
+    btn.innerText = "▶️ 播放";
+    btn.style.background = "var(--success)";
+  }
+}
+
+function togglePlayState() {
+  if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') return;
+  const state = ytPlayer.getPlayerState();
+  if (state === 1) {
+    ytPlayer.pauseVideo();
+  } else {
+    ytPlayer.unMute(); // 使用者主動點擊播放時，順便幫忙解鎖靜音
+    ytPlayer.playVideo();
+  }
+}
+
+function adjustVolume(value) {
+  if (!ytPlayer || typeof ytPlayer.setVolume !== 'function') return;
+  ytPlayer.setVolume(value);
+  if (value > 0) {
+    ytPlayer.unMute(); // 只要使用者拉動音量滑桿，立刻強行解開瀏覽器的靜音鎖！
+  }
+}
+
+function playRandomKey() {
+  if (myMusicPool.length === 0) return;
+  const randomIndex = Math.floor(Math.random() * myMusicPool.length);
+  const selectedId = myMusicPool[randomIndex];
+  
+  if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+    ytPlayer.loadVideoById({
+      videoId: selectedId,
+      startSeconds: 0
+    });
+    ytPlayer.unMute();
+    ytPlayer.playVideo();
+    document.getElementById("current-track-id").innerText = "🎵 ID: " + selectedId;
+  }
+}
 
 function initMusicCenter() {
   const savedPool = localStorage.getItem("custom_music_pool");
@@ -258,20 +488,8 @@ function initMusicCenter() {
   } else {
     myMusicPool = [...defaultPool];
   }
-  
   localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
   updatePlaylistDOM();
-  playRandomKey(); 
-}
-
-function playRandomKey() {
-  if (myMusicPool.length === 0) {
-    document.getElementById("focus-music-player").src = "";
-    return;
-  }
-  const randomIndex = Math.floor(Math.random() * myMusicPool.length);
-  const selectedId = myMusicPool[randomIndex];
-  document.getElementById("focus-music-player").src = "https://www.youtube.com/embed/" + selectedId + "?autoplay=1&mute=1";
 }
 
 function addMusicToPool() {
@@ -306,12 +524,11 @@ function addMusicToPool() {
     
     myMusicPool.push(videoId);
     localStorage.setItem("custom_music_pool", JSON.stringify(myMusicPool));
-    
     updatePlaylistDOM();
     urlField.value = "";
     alert("✨ 成功加入隨機池！目前隨機池共有 " + myMusicPool.length + " 首歌。");
   } else {
-    alert("❌ 無法識別網址！請試著直接複製 YouTube 網址列整串（例如：https://www.youtube.com/watch?v=OS8lnKZdJYc）並貼上來。");
+    alert("❌ 無法識別網址！請貼上標準單一影片網址。");
   }
 }
 
@@ -328,12 +545,39 @@ function clearCustomPlaylist() {
   }
 }
 
-function countdown(){
-  const exam = new Date("2026-09-05").getTime();
-  const now = new Date().getTime();
-  const d = Math.floor((exam-now)/(1000*60*60*24));
-  document.getElementById("countdown").innerHTML =
-  d > 0 ? "🎯 距離考試還有 <span style='font-size: 38px; font-weight: 700; color: var(--error); vertical-align: -2px; margin: 0 4px;'>" + d + "</span> 天" : "🔥 考試已到";
+function initTargets() {
+  const savedTargets = localStorage.getItem("battle_targets");
+  let targetsState = [];
+  if (savedTargets) {
+    try { targetsState = JSON.parse(savedTargets); } catch(e) { targetsState = []; }
+  }
+  if (targetsState.length === 0) {
+    targetsState = defaultTargets.map(text => ({ text: text, done: false }));
+    localStorage.setItem("battle_targets", JSON.stringify(targetsState));
+  }
+  renderTargets(targetsState);
+}
+
+function renderTargets(targets) {
+  const container = document.getElementById("todo-container");
+  container.innerHTML = "";
+  targets.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "todo-item";
+    div.onclick = () => toggleTarget(index);
+    div.innerHTML = `
+      <input type="checkbox" ${item.done ? 'checked' : ''} onclick="event.stopPropagation(); toggleTarget(${index});">
+      <span class="todo-text ${item.done ? 'completed' : ''}">${item.text}</span>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function toggleTarget(index) {
+  const savedTargets = JSON.parse(localStorage.getItem("battle_targets"));
+  savedTargets[index].done = !savedTargets[index].done;
+  localStorage.setItem("battle_targets", JSON.stringify(savedTargets));
+  renderTargets(savedTargets);
 }
 
 function submitData(){
@@ -366,10 +610,7 @@ function submitData(){
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: body.toString()
   })
-  .then(r => {
-    if(!r.ok) throw new Error("HTTP 錯誤");
-    return r.json();
-  })
+  .then(r => { if(!r.ok) throw new Error("HTTP 錯誤"); return r.json(); })
   .then(data => {
     statusDiv.style.display = "block";
     if(data && data.status === 'success'){
@@ -397,7 +638,6 @@ function submitData(){
 function load(){
   document.getElementById("dashboard").innerHTML = "⏳ 雲端同步中...";
   document.getElementById("reviewBox").innerHTML = "⏳ 雲端同步中...";
-
   fetch(API + "?action=getProgress")
   .then(r => r.json())
   .then(data => {
@@ -446,7 +686,7 @@ function renderReviewDue(list){
 
 // 🌐 啟動執行
 countdown();
-initMusicCenter(); 
+initTargets();
 load();
 </script>
 
