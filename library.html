@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>法規與題庫中心｜國考戰情系統</title>
+<title>五大考科法規題庫庫房｜國考戰情系統</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght=300;500;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -69,11 +69,11 @@ h1{
 
 .grid{
   display:grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 0.8fr;
   gap:30px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .grid { grid-template-columns: 1fr; }
 }
 
@@ -81,7 +81,7 @@ h1{
   background:var(--card);
   border:1px solid var(--line);
   padding:22px; 
-  margin-bottom:20px;
+  margin-bottom:25px;
 }
 
 .title{
@@ -92,7 +92,6 @@ h1{
   margin-bottom:15px;
 }
 
-/* 🔗 連結按鈕清單排版 */
 .link-list {
   display: flex;
   flex-direction: column;
@@ -125,6 +124,7 @@ h1{
   color: white;
   padding: 2px 8px;
   border-radius: 3px;
+  white-space: nowrap;
 }
 
 .database-tag {
@@ -158,46 +158,126 @@ h1{
 <div class="container">
 
 <header>
-  <h1>📚 法規與題庫武器庫</h1>
-  <p style="color: var(--muted); margin-top: 5px;">快速直達核心核心法規與個人考古題庫庫房</p>
+  <h1>📚 五大專業科目武器庫</h1>
+  <p style="color: var(--muted); margin-top: 5px;">架構對齊主面板，法條與時事精準點選</p>
 </header>
 
 <div class="grid">
 
+  <!-- ⚖️ 左欄：對齊主面板的五大核心科目 -->
   <div>
+    
+    <!-- 1. 行政法（四大核心法典全補齊） -->
     <div class="card">
-      <div class="title">⚖️ 社會福利與行政法規</div>
-      <p class="note-text">點擊直接跳轉至全國法規資料庫最新條文：</p>
-      
+      <div class="title">⚖️ 行政法</div>
+      <p class="note-text">攻克行政行為、裁罰、執行與終極救濟的四大支柱：</p>
       <div class="link-list">
-        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050136" target="_blank" class="law-btn">
-          <span>《社會救助法》</span>
-          <span class="law-tag">社政核心</span>
-        </a>
-        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050001" target="_blank" class="law-btn">
-          <span>《兒童及少年福利與權益保障法》</span>
-          <span class="law-tag">兒少福利</span>
-        </a>
-        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050046" target="_blank" class="law-btn">
-          <span>《身心障礙者權益保障法》</span>
-          <span class="law-tag">身障福利</span>
-        </a>
-        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0170001" target="_blank" class="law-btn">
-          <span>《原住民族教育法》</span>
-          <span class="law-tag">原民專有</span>
-        </a>
         <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0030055" target="_blank" class="law-btn">
           <span>《行政程序法》</span>
-          <span class="law-tag">行政法</span>
+          <span class="law-tag">§135行政契約 / 處分</span>
         </a>
         <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0030250" target="_blank" class="law-btn">
           <span>《行政罰法》</span>
-          <span class="law-tag">本週強攻</span>
+          <span class="law-tag" style="background:#a35d5d;">§26一行為不二罰</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0030023" target="_blank" class="law-btn">
+          <span>《行政執行法》</span>
+          <span class="law-tag" style="background:#5da373;">代履行 / 即時強制</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0030132" target="_blank" class="law-btn">
+          <span>《訴願法》</span>
+          <span class="law-tag">管轄機關認定</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0030154" target="_blank" class="law-btn">
+          <span>《行政訴訟法》</span>
+          <span class="law-tag" style="background:#5d7fa3;">訴訟類型 / 撤銷訴訟</span>
         </a>
       </div>
     </div>
+
+    <!-- 2. 社會福利政策與法規 -->
+    <div class="card">
+      <div class="title">👥 社會福利政策與法規</div>
+      <p class="note-text">社政核心體系（經濟安全、四大人口群體、長照）：</p>
+      <div class="link-list">
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050136" target="_blank" class="law-btn">
+          <span>《社會救助法》</span>
+          <span class="law-tag">生存權保障 / 扶助</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050001" target="_blank" class="law-btn">
+          <span>《兒童及少年福利與權益保障法》</span>
+          <span class="law-tag">兒少權益保障</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050046" target="_blank" class="law-btn">
+          <span>《身心障礙者權益保障法》</span>
+          <span class="law-tag">身障福利 / CRPD</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050115" target="_blank" class="law-btn">
+          <span>《老人福利法》</span>
+          <span class="law-tag">高齡化對策</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050171" target="_blank" class="law-btn">
+          <span>《長期照顧服務法》</span>
+          <span class="law-tag">長照體系整合</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 3. 社會工作 -->
+    <div class="card">
+      <div class="title">🤝 社會工作</div>
+      <p class="note-text">專業倫理、危機 Intervention 與社區工作實務基礎法規：</p>
+      <div class="link-list">
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050125" target="_blank" class="law-btn">
+          <span>《社會工作師法》</span>
+          <span class="law-tag" style="background:#5da373;">執業專業與倫理</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050013" target="_blank" class="law-btn">
+          <span>《家庭暴力防治法》</span>
+          <span class="law-tag">危機介入 / 保護令</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050165" target="_blank" class="law-btn">
+          <span>《志願服務法》</span>
+          <span class="law-tag">社區資源連結</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 4. 社會學 -->
+    <div class="card">
+      <div class="title">🌐 社會學</div>
+      <p class="note-text">申論時事焦點（文化資本、全球化、社會不平等）：</p>
+      <div class="link-list">
+        <a href="https://www.stat.gov.tw" target="_blank" class="law-btn">
+          <span>主計總處全球資訊網（最新統計指標）</span>
+          <span class="law-tag" style="background:#5d7fa3;">社會時事數據</span>
+        </a>
+        <a href="#" onclick="alert('💡 申論提示：全球化對原民文化的衝擊，應結合布迪厄『象徵資本與文化階層化』進行申論批判！')" class="law-btn">
+          <span>💡 社會學經典理論申論破題要領</span>
+          <span class="law-tag" style="background:#c9b097;">申論骨架</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 5. 原民法規 -->
+    <div class="card">
+      <div class="title">🏹 原民法規</div>
+      <p class="note-text">原民特考決勝關鍵（原住民族主體性與教育保障）：</p>
+      <div class="link-list">
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0170001" target="_blank" class="law-btn">
+          <span>《原住民族教育法》</span>
+          <span class="law-tag" style="background:#a35d5d;">民族/實驗教育</span>
+        </a>
+        <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0130001" target="_blank" class="law-btn">
+          <span>《原住民族基本法》</span>
+          <span class="law-tag">原民最高總綱</span>
+        </a>
+      </div>
+    </div>
+
   </div>
 
+  <!-- 📊 右欄：歷屆題庫與備考指南 -->
   <div>
     <div class="card">
       <div class="title">🎯 題庫與線上刷題</div>
@@ -212,21 +292,17 @@ h1{
           <span>公職王歷屆試題下載</span>
           <span class="database-tag">考古題 PDF</span>
         </a>
-        <a href="#" onclick="alert('💡 提示：可編輯代碼將此處替換為你的 Google 雲端錯題本網址！')" class="law-btn">
+        <a href="#" onclick="alert('💡 提示：可將此處替換為你的雲端錯題本網址！')" class="law-btn">
           <span>個人申論題錯題本 (雲端硬碟)</span>
           <span class="database-tag">私房資源</span>
-        </a>
-        <a href="#" onclick="alert('💡 提示：可將此處替換為你的 Notion 筆記連結！')" class="law-btn">
-          <span>社會學/社工時事筆記資料庫</span>
-          <span class="database-tag">Notion</span>
         </a>
       </div>
     </div>
     
     <div class="card" style="background: #f3f0ec;">
       <div class="title" style="border-left-color: var(--error);">💡 備考指揮官碎碎念</div>
-      <p style="font-size: 15px; margin: 0; color: var(--text);">
-        三等考試通常**法規名稱**與**重要條號（如行政罰 §26、§27）**必須在申論題中精準引述。刷選擇題時錯題一定要立刻收錄，這個分頁就是你的彈藥庫！
+      <p style="font-size: 15px; margin: 0; color: var(--text); text-align: justify;">
+        **行政法高分心法：** 申論題如果考出行政機關對人民處分後的後續追討（如溢領補貼），記得從《行政程序法》不當得利開始，一路鋪陳到《行政執行法》的公法上金錢給付義務執行；如果人民不服，則要懂得切換到《訴願法》與《行政訴訟法》的撤銷訴訟。法典之間的連貫性，就是三等上榜的關鍵！
       </p>
     </div>
   </div>
