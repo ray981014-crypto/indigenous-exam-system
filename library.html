@@ -241,6 +241,7 @@ h1{
 
 /* 自訂連結：可刪除的列 */
 .law-btn-wrap{
+  position:relative;
   display:flex;
   gap:8px;
   align-items:stretch;
@@ -270,6 +271,93 @@ h1{
   outline:2px solid var(--error);
   outline-offset:1px;
 }
+
+/* 刪除前的二次確認（防呆）：蓋在原本的連結與 × 按鈕上方 */
+.law-btn-wrap.confirming .law-btn,
+.law-btn-wrap.confirming .remove-btn{
+  visibility:hidden;
+}
+.confirm-bar{
+  display:none;
+  position:absolute;
+  inset:0;
+  align-items:center;
+  gap:10px;
+  background:#fdf2f2;
+  border:1px solid var(--error);
+  border-radius:4px;
+  padding:0 14px;
+}
+.law-btn-wrap.confirming .confirm-bar{ display:flex; }
+.confirm-text{
+  flex:1;
+  font-size:14px;
+  color:var(--error);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.confirm-cancel,
+.confirm-delete{
+  flex-shrink:0;
+  padding:7px 14px;
+  border-radius:4px;
+  font-size:13px;
+  font-family:inherit;
+  cursor:pointer;
+  border:1px solid var(--line);
+}
+.confirm-cancel{ background:#fff; color:var(--text); }
+.confirm-cancel:hover{ background:#f3f0ec; }
+.confirm-cancel:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+.confirm-delete{ background:var(--error); color:#fff; border-color:var(--error); }
+.confirm-delete:hover{ opacity:0.85; }
+.confirm-delete:focus-visible{ outline:2px solid var(--error); outline-offset:1px; }
+
+/* 刪除後的復原提示（第二層防呆） */
+.undo-toast{
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  transform:translateX(-50%) translateY(16px);
+  background:#2f2b28;
+  color:#fff;
+  padding:12px 16px;
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  font-size:14px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.25);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.25s ease, transform 0.25s ease;
+  z-index:1000;
+  max-width:min(92vw, 420px);
+}
+.undo-toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+  pointer-events:auto;
+}
+.undo-toast span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.undo-toast button{
+  background:none;
+  border:none;
+  color:var(--accent-soft);
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  flex-shrink:0;
+  font-family:inherit;
+  padding:0;
+}
+.undo-toast button:hover{ text-decoration:underline; }
+.undo-toast button:focus-visible{ outline:2px solid var(--accent-soft); outline-offset:2px; }
 
 /* 新增自訂法規網址表單 */
 .add-card{ margin-bottom:25px; }
@@ -517,6 +605,11 @@ h1{
 </div>
 </div>
 
+<div id="undo-toast" class="undo-toast" role="status" aria-live="polite">
+  <span id="undo-toast-text"></span>
+  <button type="button" id="undo-toast-btn">復原</button>
+</div>
+
 <script>
 // 展開式提示卡：取代原本的 alert() 彈窗
 document.querySelectorAll('[data-expand]').forEach(function(btn){
@@ -566,6 +659,34 @@ document.querySelectorAll('[data-expand]').forEach(function(btn){
   });
 })();
 
+// 復原提示（刪除後的第二層防呆）
+(function(){
+  var toastEl = document.getElementById('undo-toast');
+  var toastText = document.getElementById('undo-toast-text');
+  var toastBtn = document.getElementById('undo-toast-btn');
+  var hideTimer = null;
+  var pendingUndo = null;
+
+  function showUndo(label, undoFn){
+    pendingUndo = undoFn;
+    toastText.textContent = '已刪除「' + label + '」';
+    toastEl.classList.add('show');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(hideUndo, 6000);
+  }
+  function hideUndo(){
+    toastEl.classList.remove('show');
+    clearTimeout(hideTimer);
+    pendingUndo = null;
+  }
+  toastBtn.addEventListener('click', function(){
+    if (pendingUndo) pendingUndo();
+    hideUndo();
+  });
+
+  window.__examLibraryShowUndo = showUndo;
+})();
+
 // 自訂法規／網址：選好科目即可新增，永久存在本機，並可隨時刪除
 (function(){
   var STORAGE_KEY = 'examLibrary.customLawLinks';
@@ -596,6 +717,19 @@ document.querySelectorAll('[data-expand]').forEach(function(btn){
     });
   }
 
+  function performDelete(item, wrap){
+    saveAll(loadAll().filter(function(i){ return i.id !== item.id; }));
+    wrap.remove();
+    if (window.__examLibraryShowUndo){
+      window.__examLibraryShowUndo(item.label, function(){
+        var items = loadAll();
+        items.push(item);
+        saveAll(items);
+        renderItem(item);
+      });
+    }
+  }
+
   function renderItem(item){
     var container = listMap[item.category] || listMap.other;
     if (!container) return;
@@ -617,14 +751,43 @@ document.querySelectorAll('[data-expand]').forEach(function(btn){
     delBtn.className = 'remove-btn';
     delBtn.setAttribute('aria-label', '刪除「' + item.label + '」這個自訂連結');
     delBtn.textContent = '×';
-    delBtn.addEventListener('click', function(){
-      wrap.remove();
-      saveAll(loadAll().filter(function(i){ return i.id !== item.id; }));
-    });
+
+    var confirmBar = document.createElement('div');
+    confirmBar.className = 'confirm-bar';
+    confirmBar.innerHTML =
+      '<span class="confirm-text">刪除「' + escapeHtml(item.label) + '」？</span>' +
+      '<button type="button" class="confirm-cancel">取消</button>' +
+      '<button type="button" class="confirm-delete">刪除</button>';
 
     wrap.appendChild(a);
     wrap.appendChild(delBtn);
+    wrap.appendChild(confirmBar);
     container.appendChild(wrap);
+
+    var cancelBtn = confirmBar.querySelector('.confirm-cancel');
+    var deleteBtn = confirmBar.querySelector('.confirm-delete');
+    var revertTimer = null;
+
+    function enterConfirm(){
+      wrap.classList.add('confirming');
+      clearTimeout(revertTimer);
+      revertTimer = setTimeout(exitConfirm, 6000);
+      cancelBtn.focus(); // 預設焦點停在「取消」，不小心按 Enter 也不會刪到
+    }
+    function exitConfirm(){
+      wrap.classList.remove('confirming');
+      clearTimeout(revertTimer);
+    }
+
+    delBtn.addEventListener('click', enterConfirm);
+    cancelBtn.addEventListener('click', exitConfirm);
+    deleteBtn.addEventListener('click', function(){
+      clearTimeout(revertTimer);
+      performDelete(item, wrap);
+    });
+    wrap.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') exitConfirm();
+    });
   }
 
   loadAll().forEach(renderItem);
@@ -674,6 +837,13 @@ document.querySelectorAll('[data-expand]').forEach(function(btn){
   [labelInput, urlInput].forEach(function(input){
     input.addEventListener('keydown', function(e){
       if (e.key === 'Enter'){ addBtn.click(); }
+    });
+  });
+
+  // 點到其他地方時，自動收起還開著的刪除確認列
+  document.addEventListener('click', function(e){
+    document.querySelectorAll('.law-btn-wrap.confirming').forEach(function(w){
+      if (!w.contains(e.target)) w.classList.remove('confirming');
     });
   });
 })();
